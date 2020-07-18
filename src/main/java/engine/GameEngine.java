@@ -1,5 +1,6 @@
 package engine;
 
+import utils.ResourceLoader;
 import utils.Timer;
 
 public class GameEngine implements Runnable {
@@ -7,20 +8,14 @@ public class GameEngine implements Runnable {
     public static final int TARGET_FPS = 30;
     public static final int TARGET_UPS = 30;
 
-    private final Thread gameLoopThread;
     private final Window window;
     private final IGameLogic gameLogic;
     private final Timer timer;
 
     public GameEngine(Window window,IGameLogic gameLogic) {
-        this.gameLoopThread = new Thread(this,"GAME_LOOP_THREAD");
         this.window = window;
         this.gameLogic = gameLogic;
         this.timer = new Timer();
-    }
-
-    public void start(){
-        gameLoopThread.start();
     }
 
     @Override
@@ -30,6 +25,8 @@ public class GameEngine implements Runnable {
             gameLoop();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            cleanup();
         }
     }
 
@@ -87,5 +84,9 @@ public class GameEngine implements Runnable {
     protected void render(){
         gameLogic.render(window);
         window.update();
+    }
+
+    protected void cleanup(){
+        gameLogic.cleanup();
     }
 }

@@ -3,6 +3,7 @@ package game;
 import engine.IGameLogic;
 import engine.Renderer;
 import engine.Window;
+import utils.ResourceLoader;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -18,12 +19,13 @@ public class MyFirstGame implements IGameLogic {
     @Override
     public void init() throws Exception {
         renderer.init();
+        ResourceLoader.init();
     }
 
     @Override
     public void input(Window window) {
         if(window.isKeyPressed(GLFW_KEY_ESCAPE)){
-            window.isShouldClose();
+            window.close();
         }
     }
 
@@ -43,5 +45,10 @@ public class MyFirstGame implements IGameLogic {
         float b = 0.1f;
         renderer.clearColor(r,g,b,1.0f);
         renderer.clear();
+    }
+
+    @Override
+    public void cleanup() {
+        ResourceLoader.cleanup();
     }
 }

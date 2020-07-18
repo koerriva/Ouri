@@ -1,10 +1,15 @@
 package engine;
 
+import utils.ResourceLoader;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class Renderer {
-    public void init() throws Exception{
+    private ShaderProgram shaderProgram;
 
+    public void init() throws Exception{
+        String[] source = ResourceLoader.loadShaderFile("base");
+        shaderProgram = new ShaderProgram(source[0],source[1]);
     }
 
     public void viewport(int xpos,int ypos,int width,int height){
