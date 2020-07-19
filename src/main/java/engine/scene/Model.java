@@ -44,6 +44,10 @@ public class Model {
         return meshList;
     }
 
+    public void cleanup(){
+        meshList.forEach(Mesh::cleanup);
+    }
+
     private byte[] getBufferData(int idx,GLTF gltf){
         GLTF_Accessor accessor = gltf.getAccessors().get(idx);
         System.out.println("Type "+accessor.getType());

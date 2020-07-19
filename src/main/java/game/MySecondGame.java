@@ -68,5 +68,6 @@ public class MySecondGame implements IGameLogic {
         ResourceLoader.cleanup();
         renderer.cleanup();
         mesh.cleanup();
+        scene.cleanup();
     }
 }
