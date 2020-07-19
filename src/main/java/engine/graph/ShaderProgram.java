@@ -1,10 +1,18 @@
 package engine.graph;
 
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryStack;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.lwjgl.opengl.GL41.*;
 
 public class ShaderProgram {
     private final int programId;
     private final int vertShaderId,fragShaderId;
+
+    private final Map<String,Integer> uniforms = new HashMap<>();
 
     public ShaderProgram(String vertCode,String fragCode) throws Exception {
         programId = glCreateProgram();
@@ -54,5 +62,20 @@ public class ShaderProgram {
     public void cleanup(){
         unbind();
         if(programId!=0)glDeleteProgram(programId);
+    }
+
+    public void createUniform(String name) throws Exception {
+        int location = glGetUniformLocation(programId,name);
+        if(location<0){
+            throw new Exception("Could not find uniform:" + name);
+        }
+        uniforms.put(name,location);
+    }
+
+    public void setUniform(String name, Matrix4f value) {
+        int location = uniforms.get(name);
+        try (MemoryStack stack = MemoryStack.stackPush()){
+            glUniformMatrix4fv(location,false,value.get(stack.mallocFloat(16)));
+        }
     }
 }
