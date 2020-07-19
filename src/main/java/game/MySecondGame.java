@@ -3,6 +3,8 @@ package game;
 import engine.IGameLogic;
 import engine.Renderer;
 import engine.Window;
+import engine.graph.Mesh;
+import engine.scene.Model;
 import utils.ResourceLoader;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
@@ -12,7 +14,9 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class MySecondGame implements IGameLogic {
     private final Renderer renderer;
 
-    private float color;
+    private Mesh mesh;
+
+    private Model scene;
 
     public MySecondGame() {
         this.renderer = new Renderer();
@@ -22,6 +26,25 @@ public class MySecondGame implements IGameLogic {
     public void init() throws Exception {
         ResourceLoader.init();
         renderer.init();
+
+        scene = ResourceLoader.loadScene("Tank");
+
+        //逆时针
+        float[] vertices = new float[]{
+                -0.5f,0.5f,0.0f,
+                -0.5f,-0.5f,0.0f,
+                0.5f,-0.5f,0.0f,
+                0.5f,0.5f,0.0f,
+        };
+        int[] indices = new int[]{0,1,3,3,1,2};
+        float[] colors = new float[]{
+                1.0f,0.0f,0.0f,
+                0.0f,1.0f,0.0f,
+                0.0f,0.0f,1.0f,
+                0.5f,0.5f,0.5f
+        };
+
+        mesh = new Mesh(vertices,indices,colors);
     }
 
     @Override
@@ -33,17 +56,17 @@ public class MySecondGame implements IGameLogic {
 
     @Override
     public void update(float interval) {
-//        color = 0.2f;
     }
 
     @Override
     public void render(Window window) {
-        renderer.render(window);
+        renderer.render(window,scene.getMeshList());
     }
 
     @Override
     public void cleanup() {
         ResourceLoader.cleanup();
         renderer.cleanup();
+        mesh.cleanup();
     }
 }

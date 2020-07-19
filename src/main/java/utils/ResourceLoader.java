@@ -1,6 +1,13 @@
 package utils;
 
-import java.io.*;
+import com.alibaba.fastjson.JSON;
+import engine.graph.Mesh;
+import engine.scene.Model;
+import engine.scene.gltf.GLTF;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 
@@ -31,6 +38,13 @@ public class ResourceLoader {
         data[0] = new String(loadFile(path1),Charset.defaultCharset());
         data[1] = new String(loadFile(path2),Charset.defaultCharset());
         return data;
+    }
+
+    public static Model loadScene(String name) throws IOException{
+        Mesh[] meshes;
+        byte[] data = loadFile("data/model/"+name+".gltf");
+        GLTF gltf = JSON.parseObject(data,GLTF.class);
+        return new Model(gltf);
     }
 
     public static byte[] loadFile(String filename) throws IOException{
