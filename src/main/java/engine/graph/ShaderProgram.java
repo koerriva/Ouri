@@ -1,4 +1,4 @@
-package engine;
+package engine.graph;
 
 import static org.lwjgl.opengl.GL41.*;
 

@@ -5,21 +5,23 @@ import engine.Renderer;
 import engine.Window;
 import utils.ResourceLoader;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class MyFirstGame implements IGameLogic {
-    private Renderer renderer;
+public class MySecondGame implements IGameLogic {
+    private final Renderer renderer;
 
     private float color;
 
-    public MyFirstGame() {
+    public MySecondGame() {
         this.renderer = new Renderer();
     }
 
     @Override
     public void init() throws Exception {
-        renderer.init();
         ResourceLoader.init();
+        renderer.init();
     }
 
     @Override
@@ -36,15 +38,12 @@ public class MyFirstGame implements IGameLogic {
 
     @Override
     public void render(Window window) {
-        float r = (float) Math.abs(Math.sin(window.getTime()));
-        float g = (float) Math.abs(Math.cos(window.getTime()));
-        float b = 0.1f;
-        renderer.clearColor(r,g,b,1.0f);
-        renderer.clear();
+        renderer.render(window);
     }
 
     @Override
     public void cleanup() {
         ResourceLoader.cleanup();
+        renderer.cleanup();
     }
 }
