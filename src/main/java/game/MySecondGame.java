@@ -4,7 +4,7 @@ import engine.IGameLogic;
 import engine.Renderer;
 import engine.Window;
 import engine.graph.Mesh;
-import engine.scene.Model;
+import engine.scene.Scene;
 import utils.ResourceLoader;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
@@ -16,7 +16,7 @@ public class MySecondGame implements IGameLogic {
 
     private Mesh mesh;
 
-    private Model scene;
+    private Scene scene;
 
     public MySecondGame() {
         this.renderer = new Renderer();
@@ -60,7 +60,7 @@ public class MySecondGame implements IGameLogic {
 
     @Override
     public void render(Window window) {
-        renderer.render(window,scene.getMeshList());
+        renderer.render(window,scene.getNodes());
     }
 
     @Override

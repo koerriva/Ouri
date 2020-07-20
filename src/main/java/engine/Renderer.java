@@ -2,8 +2,12 @@ package engine;
 
 import engine.graph.Mesh;
 import engine.graph.ShaderProgram;
+import engine.graph.Transformation;
+import engine.scene.Node;
 import org.joml.Matrix4d;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 import utils.ResourceLoader;
 
@@ -25,19 +29,21 @@ public class Renderer {
     private float Z_NEAR = 0.01f;
     private float aspect = 16.0f/9.0f;
 
-    private Matrix4f projectionMatrix;
-    private Matrix4f orthographicMatrix;
+    private final Transformation transformation;
+
+    public Renderer() {
+        transformation = new Transformation();
+    }
 
     public void init() throws Exception{
         String[] source = ResourceLoader.loadShaderFile("base");
         shaderProgram = new ShaderProgram(source[0],source[1]);
-        projectionMatrix = new Matrix4f().setPerspective(FOV,aspect,Z_NEAR,Z_FAR);
-        orthographicMatrix = new Matrix4f().setOrtho(-10.0f,10.0f,-10.0f,10.0f,Z_NEAR,Z_FAR);
 
         shaderProgram.createUniform("P");
+        shaderProgram.createUniform("W");
     }
 
-    public void render(Window window, List<Mesh> meshes){
+    public void render(Window window, List<Node> nodes){
         clear();
 
         if(window.isResized()){
@@ -47,8 +53,17 @@ public class Renderer {
         }
 
         shaderProgram.bind();
-        shaderProgram.setUniform("P",projectionMatrix);
-        meshes.forEach(Mesh::draw);
+//        shaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
+        shaderProgram.setUniform("P",transformation.getProjectionMatrix(10,Z_NEAR,Z_FAR));
+        nodes.forEach(node -> {
+            List<Mesh> meshes = node.getMeshes();
+            Vector3f offset = node.getPosition();
+            Quaternionf rotation = node.getRotation();
+            rotation.rotateLocalY((float) Math.toRadians(1));
+            Vector3f scale = node.getScale();
+            shaderProgram.setUniform("W",transformation.getWorldMatrix(offset,rotation,scale));
+            meshes.forEach(Mesh::draw);
+        });
         shaderProgram.unbind();
     }
 

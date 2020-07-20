@@ -2,7 +2,7 @@ package utils;
 
 import com.alibaba.fastjson.JSON;
 import engine.graph.Mesh;
-import engine.scene.Model;
+import engine.scene.Scene;
 import engine.scene.gltf.GLTF;
 
 import java.io.File;
@@ -40,11 +40,11 @@ public class ResourceLoader {
         return data;
     }
 
-    public static Model loadScene(String name) throws IOException{
+    public static Scene loadScene(String name) throws IOException{
         Mesh[] meshes;
         byte[] data = loadFile("data/model/"+name+".gltf");
         GLTF gltf = JSON.parseObject(data,GLTF.class);
-        return new Model(gltf);
+        return new Scene(gltf);
     }
 
     public static byte[] loadFile(String filename) throws IOException{
