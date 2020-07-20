@@ -26,28 +26,15 @@ public class Renderer {
     private float aspect = 16.0f/9.0f;
 
     private Matrix4f projectionMatrix;
+    private Matrix4f orthographicMatrix;
 
     public void init() throws Exception{
         String[] source = ResourceLoader.loadShaderFile("base");
         shaderProgram = new ShaderProgram(source[0],source[1]);
         projectionMatrix = new Matrix4f().setPerspective(FOV,aspect,Z_NEAR,Z_FAR);
+        orthographicMatrix = new Matrix4f().setOrtho(-10.0f,10.0f,-10.0f,10.0f,Z_NEAR,Z_FAR);
 
         shaderProgram.createUniform("P");
-    }
-
-    public void render(Window window,Mesh mesh){
-        clear();
-
-        if(window.isResized()){
-            int width=window.getWidth(),height=window.getHeight();
-            glViewport(0, 0, width, height);
-            window.setResized(false);
-        }
-
-        shaderProgram.bind();
-        shaderProgram.setUniform("P",projectionMatrix);
-        mesh.draw();
-        shaderProgram.unbind();
     }
 
     public void render(Window window, List<Mesh> meshes){
