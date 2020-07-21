@@ -4,9 +4,9 @@ public class GLTF_Node {
     private String name;
     private Integer mesh;
 
-    private float[] translation;
-    private float[] rotation;
-    private float[] scale;
+    private float[] translation = new float[]{0f,0f,0f};
+    private float[] rotation = new float[]{0f,0f,0f,1f};
+    private float[] scale = new float[]{1f,1f,1f};
 
     public String getName() {
         return name;
@@ -25,9 +25,6 @@ public class GLTF_Node {
     }
 
     public float[] getTranslation() {
-        if(translation==null){
-            return new float[]{0f,0f,0f};
-        }
         return translation;
     }
 
@@ -36,9 +33,6 @@ public class GLTF_Node {
     }
 
     public float[] getRotation() {
-        if(rotation==null){
-            return new float[]{0f,0f,0f,0f};
-        }
         return rotation;
     }
 
@@ -47,9 +41,6 @@ public class GLTF_Node {
     }
 
     public float[] getScale() {
-        if(scale==null){
-            return new float[]{1f,1f,1f};
-        }
         return scale;
     }
 
