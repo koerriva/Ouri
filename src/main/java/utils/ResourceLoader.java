@@ -41,7 +41,6 @@ public class ResourceLoader {
     }
 
     public static Scene loadScene(String name) throws IOException{
-        Mesh[] meshes;
         byte[] data = loadFile("data/model/"+name+".gltf");
         GLTF gltf = JSON.parseObject(data,GLTF.class);
         return new Scene(gltf);

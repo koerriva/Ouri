@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     id 'java'
     id 'application'
@@ -5,14 +7,19 @@ plugins {
 
 project.ext.lwjglVersion = "3.2.3"
 project.ext.jomlVersion = "1.9.25"
-project.ext.lwjglNatives = "natives-macos"
+project.ext.lwjglNatives = "natives-windows"
+if(Os.isFamily(Os.FAMILY_MAC)){
+    project.ext.lwjglNatives = "natives-macos"
+}
 
 group 'com.koerriva'
 version '1.0'
 
 application {
     mainClassName = 'game.Main'
-    applicationDefaultJvmArgs = ['-XstartOnFirstThread']
+    if(Os.isFamily(Os.FAMILY_MAC)){
+        applicationDefaultJvmArgs = ['-XstartOnFirstThread']
+    }
 }
 
 repositories {
@@ -45,7 +52,9 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-vulkan::$lwjglNatives"
+    if(Os.isFamily(Os.FAMILY_MAC)){
+        runtimeOnly "org.lwjgl:lwjgl-vulkan::$lwjglNatives"
+    }
     implementation "org.joml:joml:${jomlVersion}"
 
     compile 'com.alibaba:fastjson:1.2.70'

@@ -1,5 +1,6 @@
 package engine.graph;
 
+import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
@@ -60,8 +61,8 @@ public class Mesh {
         glBindVertexArray(0);
     }
 
-    public Mesh(byte[] positions,int posCount,byte[] indices,int idxCount){
-        vboList = new int[2];
+    public Mesh(byte[] positions, int posCount, byte[] indices, int idxCount, Vector4f baseColor){
+        vboList = new int[3];
         indicesCount = idxCount;
 
         vao = glGenVertexArrays();
@@ -80,16 +81,23 @@ public class Mesh {
         MemoryUtil.memFree(pos);
 
         //颜色
-//        FloatBuffer color = MemoryUtil.memAlloc(colors.length);
-//        color.put(colors).flip();
-//        int colorVbo = glGenBuffers();
-//        glBindBuffer(GL_ARRAY_BUFFER,colorVbo);
-//        glBufferData(GL_ARRAY_BUFFER,color,GL_STATIC_DRAW);
-//        glEnableVertexAttribArray(1);
-//        glVertexAttribPointer(1,3,GL_FLOAT,false,0,0);
-//        glBindBuffer(GL_ARRAY_BUFFER,0);
-//        vboList[1] = colorVbo;
-//        MemoryUtil.memFree(color);
+        float[] colors = new float[posCount*4];
+        for (int i=0;i<posCount;i++){
+            colors[i*4]=baseColor.x;
+            colors[i*4+1] = baseColor.y;
+            colors[i*4+2] = baseColor.z;
+            colors[i*4+3] = baseColor.w;
+        }
+        FloatBuffer color = MemoryUtil.memAllocFloat(colors.length);
+        color.put(colors).flip();
+        int colorVbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER,colorVbo);
+        glBufferData(GL_ARRAY_BUFFER,color,GL_STATIC_DRAW);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1,4,GL_FLOAT,false,0,0);
+        glBindBuffer(GL_ARRAY_BUFFER,0);
+        vboList[2] = colorVbo;
+        MemoryUtil.memFree(color);
 
         //索引
         ByteBuffer idx = MemoryUtil.memAlloc(indices.length);

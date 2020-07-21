@@ -24,6 +24,15 @@ public class Node {
         scale = new Vector3f(1);
     }
 
+    public Node(String name){
+        this.name = name;
+        this.meshes = new ArrayList<>();
+
+        position = new Vector3f();
+        rotation = new Quaternionf();
+        scale = new Vector3f(1);
+    }
+
     public String getName() {
         return name;
     }

@@ -36,11 +36,13 @@ public class Renderer {
     }
 
     public void init() throws Exception{
+        glEnable(GL_DEPTH_TEST);
         String[] source = ResourceLoader.loadShaderFile("base");
         shaderProgram = new ShaderProgram(source[0],source[1]);
 
         shaderProgram.createUniform("P");
         shaderProgram.createUniform("W");
+        shaderProgram.createUniform("V");
     }
 
     public void render(Window window, List<Node> nodes){
@@ -55,6 +57,8 @@ public class Renderer {
         shaderProgram.bind();
 //        shaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
         shaderProgram.setUniform("P",transformation.getProjectionMatrix(10,Z_NEAR,Z_FAR));
+        Vector3f eye = new Vector3f(7.35f,4.95f,6.9f);
+        shaderProgram.setUniform("V",transformation.getViewMatrix(eye,new Vector3f()));
         nodes.forEach(node -> {
             List<Mesh> meshes = node.getMeshes();
             Vector3f offset = node.getPosition();
