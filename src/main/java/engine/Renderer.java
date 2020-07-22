@@ -36,7 +36,8 @@ public class Renderer {
     }
 
     public void init() throws Exception{
-        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST|GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         String[] source = ResourceLoader.loadShaderFile("base");
         shaderProgram = new ShaderProgram(source[0],source[1]);
 
