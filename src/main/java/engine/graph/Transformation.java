@@ -1,5 +1,6 @@
 package engine.graph;
 
+import engine.scene.Camera;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -32,7 +33,8 @@ public class Transformation {
                 .scale(scale);
     }
 
-    public final Matrix4f getViewMatrix(Vector3f eye,Vector3f target){
-        return V.identity().lookAt(eye,target,new Vector3f(0,1,0));
+    public final Matrix4f getViewMatrix(Camera camera){
+        return V.identity()
+                .lookAt(camera.getPosition(),new Vector3f(),new Vector3f(0,1,0));
     }
 }

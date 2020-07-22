@@ -4,6 +4,7 @@ import engine.graph.Mesh;
 import engine.graph.ShaderProgram;
 import engine.graph.Transformation;
 import engine.scene.Node;
+import engine.scene.Scene;
 import org.joml.Matrix4d;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -47,7 +48,7 @@ public class Renderer {
         shaderProgram.createUniform("texture0");
     }
 
-    public void render(Window window, List<Node> nodes){
+    public void render(Window window, Scene scene){
         clear();
 
         if(window.isResized()){
@@ -59,15 +60,14 @@ public class Renderer {
         shaderProgram.bind();
 //        shaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
         shaderProgram.setUniform("P",transformation.getProjectionMatrix(10,Z_NEAR,Z_FAR));
-        Vector3f eye = new Vector3f(7.35f,4.95f,6.9f);
-        shaderProgram.setUniform("V",transformation.getViewMatrix(eye,new Vector3f()));
-        nodes.forEach(node -> {
-            List<Mesh> meshes = node.getMeshes();
+        shaderProgram.setUniform("V",transformation.getViewMatrix(scene.getCamera()));
+        scene.getModels().forEach(model -> {
+            List<Mesh> meshes = model.getMeshes();
             for (Mesh mesh : meshes) {
-                Vector3f offset = node.getPosition();
-                Quaternionf rotation = node.getRotation();
+                Vector3f offset = model.getPosition();
+                Quaternionf rotation = model.getRotation();
                 rotation.rotateLocalY((float) Math.toRadians(1));
-                Vector3f scale = node.getScale();
+                Vector3f scale = model.getScale();
                 shaderProgram.setUniform("W",transformation.getWorldMatrix(offset,rotation,scale));
                 shaderProgram.setUniform("texture0",0);
                 mesh.draw();

@@ -12,11 +12,12 @@ import java.util.Map;
 
 public class Scene {
     private GLTF gltf;
-    private final List<Node> nodes;
+    private final List<Model> models;
+    private Camera camera = new Camera("MainCamera");
 
     public Scene(GLTF gltf){
         this.gltf = gltf;
-        nodes = new ArrayList<>(gltf.getNodes().size());
+        models = new ArrayList<>();
 
         for (GLTF_Node n:gltf.getNodes()){
             String name = n.getName();
@@ -62,24 +63,26 @@ public class Scene {
                 model.setScale(scale);
                 model.setRotation(rotation);
 
-                nodes.add(model);
+                models.add(model);
             }else if(name.equals("Camera")){
-                Camera camera = new Camera(name);
+                camera = new Camera(name);
                 camera.setPosition(translation);
                 camera.setScale(scale);
                 camera.setRotation(rotation);
-
-                nodes.add(camera);
             }
         }
     }
 
-    public List<Node> getNodes(){
-        return nodes;
+    public List<Model> getModels(){
+        return models;
+    }
+
+    public final Camera getCamera(){
+        return camera;
     }
 
     public void cleanup(){
-        nodes.forEach(n->{
+        models.forEach(n->{
             n.getMeshes().forEach(Mesh::cleanup);
         });
     }

@@ -40,7 +40,7 @@ public class MySecondGame implements IGameLogic {
 
     @Override
     public void render(Window window) {
-        renderer.render(window,scene.getNodes());
+        renderer.render(window,scene);
     }
 
     @Override
