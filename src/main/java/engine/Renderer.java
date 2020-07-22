@@ -43,6 +43,7 @@ public class Renderer {
         shaderProgram.createUniform("P");
         shaderProgram.createUniform("W");
         shaderProgram.createUniform("V");
+        shaderProgram.createUniform("time");
     }
 
     public void render(Window window, List<Node> nodes){
@@ -59,6 +60,8 @@ public class Renderer {
         shaderProgram.setUniform("P",transformation.getProjectionMatrix(10,Z_NEAR,Z_FAR));
         Vector3f eye = new Vector3f(7.35f,4.95f,6.9f);
         shaderProgram.setUniform("V",transformation.getViewMatrix(eye,new Vector3f()));
+
+        shaderProgram.setUniform("time", (float) window.getTime());
         nodes.forEach(node -> {
             List<Mesh> meshes = node.getMeshes();
             Vector3f offset = node.getPosition();

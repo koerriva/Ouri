@@ -61,8 +61,10 @@ public class Mesh {
         glBindVertexArray(0);
     }
 
-    public Mesh(byte[] positions, int posCount, byte[] indices, int idxCount, Vector4f baseColor){
-        vboList = new int[3];
+    public Mesh(byte[] positions, int posCount
+                , byte[] normals, int normalCount
+            , byte[] indices, int idxCount, Vector4f baseColor){
+        vboList = new int[4];
         indicesCount = idxCount;
 
         vao = glGenVertexArrays();
@@ -80,6 +82,18 @@ public class Mesh {
         vboList[0] = posVbo;
         MemoryUtil.memFree(pos);
 
+        //法线
+        ByteBuffer normal = MemoryUtil.memAlloc(normals.length);
+        normal.put(normals).flip();
+        int normalVbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER,normalVbo);
+        glBufferData(GL_ARRAY_BUFFER,normal,GL_STATIC_DRAW);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1,3,GL_FLOAT,false,0,0);
+        glBindBuffer(GL_ARRAY_BUFFER,0);
+        vboList[1] = normalVbo;
+        MemoryUtil.memFree(normal);
+
         //颜色
         float[] colors = new float[posCount*4];
         for (int i=0;i<posCount;i++){
@@ -93,8 +107,8 @@ public class Mesh {
         int colorVbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER,colorVbo);
         glBufferData(GL_ARRAY_BUFFER,color,GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1,4,GL_FLOAT,false,0,0);
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2,4,GL_FLOAT,false,0,0);
         glBindBuffer(GL_ARRAY_BUFFER,0);
         vboList[2] = colorVbo;
         MemoryUtil.memFree(color);
@@ -105,7 +119,7 @@ public class Mesh {
         int idxVbo = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,idxVbo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,idx,GL_STATIC_DRAW);
-        vboList[1] = idxVbo;
+        vboList[3] = idxVbo;
         MemoryUtil.memFree(idx);
 
         indicesType = GL_UNSIGNED_SHORT;
