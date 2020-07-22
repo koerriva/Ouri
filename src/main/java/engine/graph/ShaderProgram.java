@@ -78,4 +78,9 @@ public class ShaderProgram {
             glUniformMatrix4fv(location,false,value.get(stack.mallocFloat(16)));
         }
     }
+
+    public void setUniform(String name, Integer value){
+        int location = uniforms.get(name);
+        glUniform1i(location,value);
+    }
 }

@@ -43,6 +43,7 @@ public class Renderer {
         shaderProgram.createUniform("P");
         shaderProgram.createUniform("W");
         shaderProgram.createUniform("V");
+        shaderProgram.createUniform("texture0");
     }
 
     public void render(Window window, List<Node> nodes){
@@ -61,12 +62,15 @@ public class Renderer {
         shaderProgram.setUniform("V",transformation.getViewMatrix(eye,new Vector3f()));
         nodes.forEach(node -> {
             List<Mesh> meshes = node.getMeshes();
-            Vector3f offset = node.getPosition();
-            Quaternionf rotation = node.getRotation();
-            rotation.rotateLocalY((float) Math.toRadians(1));
-            Vector3f scale = node.getScale();
-            shaderProgram.setUniform("W",transformation.getWorldMatrix(offset,rotation,scale));
-            meshes.forEach(Mesh::draw);
+            for (Mesh mesh : meshes) {
+                Vector3f offset = node.getPosition();
+                Quaternionf rotation = node.getRotation();
+                rotation.rotateLocalY((float) Math.toRadians(1));
+                Vector3f scale = node.getScale();
+                shaderProgram.setUniform("W",transformation.getWorldMatrix(offset,rotation,scale));
+                shaderProgram.setUniform("texture0",0);
+                mesh.draw();
+            }
         });
         shaderProgram.unbind();
     }

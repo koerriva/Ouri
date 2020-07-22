@@ -1,6 +1,7 @@
 package engine.scene;
 
 import engine.graph.Mesh;
+import engine.graph.Texture;
 import engine.scene.gltf.*;
 import org.joml.*;
 
@@ -51,7 +52,8 @@ public class Scene {
                         color = new Vector4f(mat.getPbrMetallicRoughness().getBaseColorFactor());
                     }
 
-                    Mesh mesh = new Mesh(positionData,positionCount,indicesData,indicesCount,color);
+                    Texture texture = new Texture(color,1,1);
+                    Mesh mesh = new Mesh(positionData,positionCount,indicesData,indicesCount,texture);
                     meshes.add(mesh);
                 }
 
