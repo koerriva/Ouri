@@ -68,7 +68,7 @@ public class Scene {
                         color = new Vector4f(mat.getPbrMetallicRoughness().getBaseColorFactor());
                     }
 
-                    Texture texture = new Texture(color,1,1);
+                    Texture texture = new Texture(color,2,2);
                     Mesh mesh = new Mesh(positionData,positionCount
                             ,normalData,normalCount
                             ,texcoordData,texcoordCount

@@ -19,10 +19,7 @@ vec4 lightDir = vec4(0.0,-0.5,-0.5,0.0);
 void main(){
     vec4 vertexColor = texture(texture_diffuse,vertexTexCoord);
 
-    float intensity = max(sin(time),0);
-
-    lightDir.y = sin(time);
-    lightDir.z = -abs(1.0-abs(lightDir.y));
+    float intensity = max(abs(sin(time)),0);
 
     vec3 A = vec3(0.0,0.0,0.0);
     vec3 D = vec3(0.0);
@@ -33,5 +30,5 @@ void main(){
     float diffuseFactor = max(dot(vertexNormal,normalize(toLightDir)),0.0);
     D = lightColor * vertexColor.xyz * diffuseFactor * 1.0;
 
-    outColor = vec4((A+D+S) * vertexColor.rgb,vertexColor.a) ;
+    outColor = vec4((A+D+S) * vertexColor.rgb,1.0) ;
 }
