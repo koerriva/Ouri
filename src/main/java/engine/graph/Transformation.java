@@ -35,8 +35,8 @@ public class Transformation {
 
     public final Matrix4f getViewMatrix(Camera camera){
         return V.identity()
-                .rotate(camera.getRotation())
-                .translation(camera.getPosition())
+//                .rotate(camera.getRotation())
+//                .translation(camera.getPosition())
 //                .lookAlong(new Vector3f(0,0,1),new Vector3f(0,1,0));
                 .lookAt(camera.getPosition(),new Vector3f(),new Vector3f(0,1,0));
     }

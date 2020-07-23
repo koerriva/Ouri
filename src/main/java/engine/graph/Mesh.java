@@ -95,4 +95,8 @@ public class Mesh {
         glBindVertexArray(0);
         glDeleteVertexArrays(vao);
     }
+
+    public final Texture getTexture(){
+        return texture;
+    }
 }

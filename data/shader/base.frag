@@ -7,7 +7,7 @@ in vec2 vertexTexCoord;
 
 vec3 lightPos = vec3(7.0,4.0,6.0);
 
-uniform sampler2D texture0;
+uniform sampler2D texture_diffuse;
 uniform float time;
 uniform mat4 V;
 uniform mat4 W;
@@ -17,7 +17,7 @@ vec3 lightColor = vec3(1.0,1.0,1.0);
 vec4 lightDir = vec4(0.0,-0.5,-0.5,0.0);
 
 void main(){
-    vec4 vertexColor = texture(texture0,vertexTexCoord);
+    vec4 vertexColor = texture(texture_diffuse,vertexTexCoord);
 
     float intensity = max(sin(time),0);
 
