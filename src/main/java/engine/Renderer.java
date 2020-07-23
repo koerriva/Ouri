@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class Renderer {
     private ShaderProgram shaderProgram;
 
-    private float FOV = (float) Math.toRadians(60.0f);
+    private float FOV = (float) Math.toRadians(60);
     private float Z_FAR = 1000.0f;
     private float Z_NEAR = 0.01f;
     private float aspect = 16.0f/9.0f;
@@ -72,7 +72,7 @@ public class Renderer {
             for (Mesh mesh : meshes) {
                 Vector3f offset = model.getPosition();
                 Quaternionf rotation = model.getRotation();
-                rotation.rotateLocalY((float) Math.toRadians(1));
+//                rotation.rotateLocalY((float) Math.toRadians(1));
                 Vector3f scale = model.getScale();
                 shaderProgram.setUniform("W",transformation.getWorldMatrix(offset,rotation,scale));
 //                shaderProgram.setUniform("texture_diffuse",0);
@@ -80,11 +80,11 @@ public class Renderer {
                 shaderProgram.setUniform("albedo",mat.getAlbedo());
                 shaderProgram.setUniform("metallic",mat.getMetallic());
                 shaderProgram.setUniform("roughness",mat.getRoughness());
-                shaderProgram.setUniform("ao",mat.getAo());
+                shaderProgram.setUniform("ao",1.0f);
                 shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
 
-                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(7.0f,4.0f,6.0f)});
-                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(1.0f,0.0f,0.0f)});
+                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(4,5,-1)});
+                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(100f)});
                 mesh.draw();
             }
         });
