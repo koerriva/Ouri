@@ -53,6 +53,7 @@
     ],
     "nodes" : [
         {
+            "extras" : {},
             "mesh" : 0,
             "name" : "Tank"
         },
@@ -74,6 +75,7 @@
             "children" : [
                 1
             ],
+            "extras" : {},
             "name" : "Light",
             "rotation" : [
                 0.16907575726509094,
@@ -115,6 +117,7 @@
             ]
         },
         {
+            "extras" : {},
             "mesh" : 1,
             "name" : "Suzanne",
             "scale" : [
@@ -151,13 +154,13 @@
             "name" : "M_Body",
             "pbrMetallicRoughness" : {
                 "baseColorFactor" : [
-                    0.005293312482535839,
-                    0.06837327033281326,
-                    0.0023822991643100977,
+                    0.5243681073188782,
+                    0.8000000715255737,
+                    0.20660065114498138,
                     1
                 ],
-                "metallicFactor" : 0.9494949579238892,
-                "roughnessFactor" : 0.11111108213663101
+                "metallicFactor" : 0.9090909361839294,
+                "roughnessFactor" : 0.8383837938308716
             }
         },
         {
@@ -176,7 +179,7 @@
                     1
                 ],
                 "metallicFactor" : 0.868686854839325,
-                "roughnessFactor" : 0.17676764726638794
+                "roughnessFactor" : 0.7323232293128967
             }
         },
         {
@@ -195,7 +198,26 @@
                     1
                 ],
                 "metallicFactor" : 1,
-                "roughnessFactor" : 0.07575756311416626
+                "roughnessFactor" : 0.6717171669006348
+            }
+        },
+        {
+            "doubleSided" : true,
+            "emissiveFactor" : [
+                0,
+                0,
+                0
+            ],
+            "name" : "M_Suzanne",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.8000000715255737,
+                    0.643728494644165,
+                    0.10708863288164139,
+                    1
+                ],
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.5
             }
         }
     ],
@@ -245,7 +267,8 @@
                         "TANGENT" : 17,
                         "TEXCOORD_0" : 18
                     },
-                    "indices" : 19
+                    "indices" : 19,
+                    "material" : 3
                 }
             ]
         }

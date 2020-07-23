@@ -1,11 +1,9 @@
 package engine.graph;
 
-import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -19,9 +17,9 @@ public class Mesh {
     private int indicesCount = 0;
     private final Texture texture;
 
-    public Mesh(byte[] positions, int posCount, byte[] indices, int idxCount,Texture texture){
+    public Mesh(byte[] positions, int posCount,byte[] normals, int normalCount,byte[] texcoords,int texcoordCount, byte[] indices, int idxCount,Texture texture){
         this.texture = texture;
-        vboList = new int[3];
+        vboList = new int[4];
         indicesCount = idxCount;
 
         vao = glGenVertexArrays();
@@ -39,22 +37,29 @@ public class Mesh {
         vboList[0] = posVbo;
         MemoryUtil.memFree(pos);
 
-        //颜色
-        float[] colors = new float[posCount*2];
-        for (int i=0;i<posCount;i++){
-            colors[i*2]=0;
-            colors[i*2+1]=0;
-        }
-        FloatBuffer color = MemoryUtil.memAllocFloat(colors.length);
-        color.put(colors).flip();
-        int colorVbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER,colorVbo);
-        glBufferData(GL_ARRAY_BUFFER,color,GL_STATIC_DRAW);
+        //法线
+        ByteBuffer normal = MemoryUtil.memAlloc(normals.length);
+        normal.put(normals).flip();
+        int normalVbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER,normalVbo);
+        glBufferData(GL_ARRAY_BUFFER,normal,GL_STATIC_DRAW);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1,2,GL_FLOAT,false,0,0);
+        glVertexAttribPointer(1,3,GL_FLOAT,false,0,0);
         glBindBuffer(GL_ARRAY_BUFFER,0);
-        vboList[2] = colorVbo;
-        MemoryUtil.memFree(color);
+        vboList[1] = normalVbo;
+        MemoryUtil.memFree(normal);
+
+        //UV
+        ByteBuffer texcoord = MemoryUtil.memAlloc(texcoords.length);
+        texcoord.put(texcoords).flip();
+        int texcoordVbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER,texcoordVbo);
+        glBufferData(GL_ARRAY_BUFFER,texcoord,GL_STATIC_DRAW);
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2,2,GL_FLOAT,false,0,0);
+        glBindBuffer(GL_ARRAY_BUFFER,0);
+        vboList[2] = texcoordVbo;
+        MemoryUtil.memFree(texcoord);
 
         //索引
         ByteBuffer idx = MemoryUtil.memAlloc(indices.length);
@@ -62,7 +67,7 @@ public class Mesh {
         int idxVbo = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,idxVbo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,idx,GL_STATIC_DRAW);
-        vboList[1] = idxVbo;
+        vboList[3] = idxVbo;
         MemoryUtil.memFree(idx);
 
         indicesType = GL_UNSIGNED_SHORT;

@@ -38,10 +38,25 @@ public class Scene {
                     Integer materialIdx = primitive.getMaterial();
 
                     Integer position = attrs.get("POSITION");
+                    Integer normal = attrs.get("NORMAL");
+                    Integer tangent = attrs.get("TANGENT");
+                    Integer texcoord = attrs.get("TEXCOORD_0");
                     //position
                     GLTF_Accessor posAccessor = gltf.getAccessors().get(position);
                     byte[] positionData = getBufferData(position,gltf);
                     int positionCount = posAccessor.getCount();
+                    //normal
+                    GLTF_Accessor normalAccessor = gltf.getAccessors().get(normal);
+                    byte[] normalData = getBufferData(normal,gltf);
+                    int normalCount = normalAccessor.getCount();
+                    //tangent
+                    GLTF_Accessor tangentAccessor = gltf.getAccessors().get(tangent);
+                    byte[] tangentData = getBufferData(tangent,gltf);
+                    int tangentCount = tangentAccessor.getCount();
+                    //texcoord
+                    GLTF_Accessor texcoordAccessor = gltf.getAccessors().get(texcoord);
+                    byte[] texcoordData = getBufferData(texcoord,gltf);
+                    int texcoordCount = texcoordAccessor.getCount();
                     //indices
                     GLTF_Accessor indicesAccessor = gltf.getAccessors().get(indices);
                     byte[] indicesData = getBufferData(indices,gltf);
@@ -54,7 +69,10 @@ public class Scene {
                     }
 
                     Texture texture = new Texture(color,1,1);
-                    Mesh mesh = new Mesh(positionData,positionCount,indicesData,indicesCount,texture);
+                    Mesh mesh = new Mesh(positionData,positionCount
+                            ,normalData,normalCount
+                            ,texcoordData,texcoordCount
+                            ,indicesData,indicesCount,texture);
                     meshes.add(mesh);
                 }
 

@@ -46,6 +46,7 @@ public class Renderer {
         shaderProgram.createUniform("W");
         shaderProgram.createUniform("V");
         shaderProgram.createUniform("texture0");
+        shaderProgram.createUniform("time");
     }
 
     public void render(Window window, Scene scene){
@@ -61,6 +62,7 @@ public class Renderer {
 //        shaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
         shaderProgram.setUniform("P",transformation.getProjectionMatrix(10,Z_NEAR,Z_FAR));
         shaderProgram.setUniform("V",transformation.getViewMatrix(scene.getCamera()));
+        shaderProgram.setUniform("time", (float) window.getTime());
         scene.getModels().forEach(model -> {
             List<Mesh> meshes = model.getMeshes();
             for (Mesh mesh : meshes) {
