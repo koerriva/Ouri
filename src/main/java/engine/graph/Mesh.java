@@ -15,10 +15,10 @@ public class Mesh {
     private final int[] vboList;
     private int indicesType = GL_UNSIGNED_INT;
     private int indicesCount = 0;
-    private final Texture texture;
+    private final Material material;
 
-    public Mesh(byte[] positions, int posCount,byte[] normals, int normalCount,byte[] texcoords,int texcoordCount, byte[] indices, int idxCount,Texture texture){
-        this.texture = texture;
+    public Mesh(byte[] positions, int posCount,byte[] normals, int normalCount,byte[] texcoords,int texcoordCount, byte[] indices, int idxCount,Material material){
+        this.material = material;
         vboList = new int[4];
         indicesCount = idxCount;
 
@@ -77,7 +77,7 @@ public class Mesh {
 
     public void draw(){
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,texture.getId());
+        glBindTexture(GL_TEXTURE_2D,material.getTexture().getId());
         glBindVertexArray(vao);
 //        glDrawArrays(GL_TRIANGLES,0,getVertexCount());
         glDrawElements(GL_TRIANGLES,indicesCount,indicesType,0);
@@ -97,6 +97,10 @@ public class Mesh {
     }
 
     public final Texture getTexture(){
-        return texture;
+        return material.getTexture();
+    }
+
+    public Material getMaterial() {
+        return material;
     }
 }

@@ -1,4 +1,5 @@
 #version 330 core
+out vec4 fragColor;
 
 in vec2 TexCoords;
 in vec3 WorldPos;
@@ -11,8 +12,8 @@ uniform float roughness;
 uniform float ao;
 
 // lights
-uniform vec3 lightPositions[4];
-uniform vec3 lightColors[4];
+uniform vec3 lightPositions[1];
+uniform vec3 lightColors[1];
 
 uniform vec3 camPos;
 
@@ -62,7 +63,7 @@ void main()
 
     // reflectance equation
     vec3 Lo = vec3(0.0);
-    for(int i = 0; i < 4; ++i)
+    for(int i = 0; i < 1; ++i)
     {
         // calculate per-light radiance
         vec3 L = normalize(lightPositions[i] - WorldPos);
@@ -81,7 +82,7 @@ void main()
         kD *= 1.0 - metallic;
 
         vec3 nominator    = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+        float denominator = 1.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
         vec3 specular     = nominator / denominator;
 
         // add to outgoing radiance Lo
@@ -95,5 +96,5 @@ void main()
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0/2.2));
 
-    gl_FragColor = vec4(color, 1.0);
+    fragColor = vec4(color, 1.0);
 }

@@ -1,9 +1,11 @@
 package engine.scene;
 
+import engine.graph.Material;
 import engine.graph.Mesh;
-import engine.graph.Texture;
 import engine.scene.gltf.*;
-import org.joml.*;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,17 +64,27 @@ public class Scene {
                     byte[] indicesData = getBufferData(indices,gltf);
                     int indicesCount = indicesAccessor.getCount();
                     //texture
-                    Vector4f color = new Vector4f(1.0f);
+                    Material material;
                     if(materialIdx!=null){
                         GLTF_Material mat = gltf.getMaterials().get(materialIdx);
-                        color = new Vector4f(mat.getPbrMetallicRoughness().getBaseColorFactor());
+                        Vector4f baseColor = new Vector4f(mat.getPbrMetallicRoughness().getBaseColorFactor());
+                        material = new Material(baseColor);
+                        float metallicFactor = mat.getPbrMetallicRoughness().getMetallicFactor();
+                        float roughnessFactor = mat.getPbrMetallicRoughness().getRoughnessFactor();
+                        material.setRoughness(roughnessFactor);
+                        material.setMetallic(metallicFactor);
+                    }else{
+                        Vector4f baseColor = new Vector4f(1.0f);
+                        material = new Material(baseColor);
+                        material.setRoughness(0.99f);
+                        material.setMetallic(0.99f);
                     }
+                    material.setAo(1.0f);
 
-                    Texture texture = new Texture(color,2,2);
                     Mesh mesh = new Mesh(positionData,positionCount
                             ,normalData,normalCount
                             ,texcoordData,texcoordCount
-                            ,indicesData,indicesCount,texture);
+                            ,indicesData,indicesCount,material);
                     meshes.add(mesh);
                 }
 

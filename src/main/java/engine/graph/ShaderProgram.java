@@ -1,6 +1,7 @@
 package engine.graph;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
 import java.util.HashMap;
@@ -72,6 +73,17 @@ public class ShaderProgram {
         uniforms.put(name,location);
     }
 
+    public void createUniform(String name,int array) throws Exception {
+        for (int i = 0; i < array; i++) {
+            String n = name+"["+i+"]";
+            int location = glGetUniformLocation(programId,n);
+            if(location<0){
+                throw new Exception("Could not find uniform:" + n);
+            }
+            uniforms.put(n,location);
+        }
+    }
+
     public void setUniform(String name, Matrix4f value) {
         int location = uniforms.get(name);
         try (MemoryStack stack = MemoryStack.stackPush()){
@@ -87,5 +99,19 @@ public class ShaderProgram {
     public void setUniform(String name, Integer value){
         int location = uniforms.get(name);
         glUniform1i(location,value);
+    }
+
+    public void setUniform(String name, Vector3f value) {
+        int location = uniforms.get(name);
+        try (MemoryStack stack = MemoryStack.stackPush()){
+            glUniform3fv(location,value.get(stack.mallocFloat(3)));
+        }
+    }
+
+    public void setUniform(String name, Vector3f[] values){
+        int len = values.length;
+        for (int i = 0; i < len; i++) {
+            setUniform(name+"["+i+"]",values[i]);
+        }
     }
 }
