@@ -36,8 +36,11 @@ public class Transformation {
     public final Matrix4f getViewMatrix(Camera camera){
         Vector3f pos = new Vector3f();
         pos = camera.getPosition().negate(pos);
-        return V.identity()
-                .rotate(camera.getRotation())
-                .translation(pos);
+        V.identity();
+        V.translate(pos);
+        Vector3f dir=new Vector3f(1,0,0);
+        camera.getRotation().transform(dir);
+        V.lookAlong(dir.normalize(),new Vector3f(0,1,0));
+        return V;
     }
 }

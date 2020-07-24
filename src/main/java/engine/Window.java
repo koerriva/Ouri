@@ -1,5 +1,7 @@
 package engine;
 
+import org.joml.Vector2d;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.GL;
 
@@ -12,6 +14,10 @@ public class Window {
     private long handle=0L;
     private boolean vSync = false;
     private boolean resized = false;
+
+    private double xPos=0;
+    private double yPos=0;
+    private Vector2d mouseDir = new Vector2d();
 
     public Window(String title, int width, int height,boolean vSync) {
         this.title = title;
@@ -44,6 +50,18 @@ public class Window {
             this.height = h;
             this.resized = true;
         });
+
+        double[] xPosBuff = new double[1];
+        double[] yPosBuff = new double[1];
+        glfwGetCursorPos(handle,xPosBuff,yPosBuff);
+        xPos = xPosBuff[0]/width;yPos = yPosBuff[0]/height;
+        glfwSetCursorPosCallback(handle,((window, xpos, ypos) -> {
+            mouseDir.x = xpos/width - this.xPos;
+            mouseDir.y = ypos/height - this.yPos;
+            this.xPos = xpos/width;
+            this.yPos = ypos/height;
+            System.out.println(mouseDir);
+        }));
 
 //        glfwSetKeyCallback(handle,(window,key,scancode,action,mods)->{
 //            if(key == GLFW_KEY_ESCAPE){
@@ -104,5 +122,14 @@ public class Window {
 
     public void close(){
         glfwSetWindowShouldClose(handle,true);
+    }
+
+    public Vector2d getMouseDirection(){
+        return mouseDir;
+    }
+
+    public void setMouseDirection(){
+        mouseDir.x = 0;
+        mouseDir.y = 0;
     }
 }

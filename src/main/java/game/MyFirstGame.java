@@ -30,7 +30,7 @@ public class MyFirstGame implements IGameLogic {
     }
 
     @Override
-    public void update(float interval) {
+    public void update(Window window,float interval) {
 //        color = 0.2f;
     }
 
