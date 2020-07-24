@@ -5,10 +5,7 @@ import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL30.glGenerateMipmap;
+import static org.lwjgl.opengl.GL30.*;
 
 public class Texture {
     private final int id;
@@ -16,9 +13,9 @@ public class Texture {
     public Texture(Vector4f baseColor,int w,int h){
         byte[] bytes = new byte[w*h*4];
         for (int i = 0; i < w * h; i++) {
-            bytes[i*4] = (byte) (baseColor.x*255);
-            bytes[i*4+1] = (byte) (baseColor.y*255);
-            bytes[i*4+2] = (byte) (baseColor.x*255);
+            bytes[i*4] = (byte) (baseColor.x*255.999);
+            bytes[i*4+1] = (byte) (baseColor.y*255.999);
+            bytes[i*4+2] = (byte) (baseColor.x*255.999);
             bytes[i*4+3] = (byte) 255;
         }
         id = glGenTextures();

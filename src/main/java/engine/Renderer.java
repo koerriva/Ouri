@@ -12,7 +12,7 @@ import utils.ResourceLoader;
 
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 
 public class Renderer {
     private ShaderProgram shaderProgram;
@@ -32,6 +32,7 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+//        glEnable(GL_FRAMEBUFFER_SRGB);
 //        String[] source = ResourceLoader.loadShaderFile("base");
         String[] source = ResourceLoader.loadShaderFile("pbr");
         shaderProgram = new ShaderProgram(source[0],source[1]);
@@ -80,11 +81,11 @@ public class Renderer {
                 shaderProgram.setUniform("albedo",mat.getAlbedo());
                 shaderProgram.setUniform("metallic",mat.getMetallic());
                 shaderProgram.setUniform("roughness",mat.getRoughness());
-                shaderProgram.setUniform("ao",1.0f);
+                shaderProgram.setUniform("ao",0.99f);
                 shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
 
-                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(4,5,-1)});
-                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(100f)});
+                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(0,10,0)});
+                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(1f)});
                 mesh.draw();
             }
         });

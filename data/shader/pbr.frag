@@ -66,10 +66,12 @@ void main()
     for(int i = 0; i < 1; ++i)
     {
         // calculate per-light radiance
-        vec3 L = normalize(lightPositions[i] - WorldPos);
+//        vec3 L = normalize(lightPositions[i] - WorldPos);
+        vec3 L = -vec3(0.2,-0.8,0.0);
         vec3 H = normalize(V + L);
         float distance    = length(lightPositions[i] - WorldPos);
-        float attenuation = 1.0 / (distance * distance);
+//        float attenuation = 1.0 / (distance * distance);
+        float attenuation = 1.0;
         vec3 radiance     = lightColors[i] * attenuation;
 
         // cook-torrance brdf
