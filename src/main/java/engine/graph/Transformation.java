@@ -34,10 +34,10 @@ public class Transformation {
     }
 
     public final Matrix4f getViewMatrix(Camera camera){
+        Vector3f pos = new Vector3f();
+        pos = camera.getPosition().negate(pos);
         return V.identity()
-//                .rotate(camera.getRotation())
-//                .translation(camera.getPosition())
-//                .lookAlong(new Vector3f(0,0,1),new Vector3f(0,1,0));
-                .lookAt(camera.getPosition(),new Vector3f(),new Vector3f(0,1,0));
+                .rotate(camera.getRotation())
+                .translation(pos);
     }
 }
