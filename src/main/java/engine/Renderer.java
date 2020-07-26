@@ -32,7 +32,9 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-//        glEnable(GL_FRAMEBUFFER_SRGB);
+//        glEnable(GL_CULL_FACE);
+//        glCullFace(GL_BACK_RIGHT);
+        glEnable(GL_FRAMEBUFFER_SRGB);
 //        String[] source = ResourceLoader.loadShaderFile("base");
         String[] source = ResourceLoader.loadShaderFile("pbr");
         shaderProgram = new ShaderProgram(source[0],source[1]);
@@ -68,6 +70,7 @@ public class Renderer {
 //        shaderProgram.setUniform("P",transformation.getProjectionMatrix(10,Z_NEAR,Z_FAR));
         shaderProgram.setUniform("V",transformation.getViewMatrix(scene.getCamera()));
 //        shaderProgram.setUniform("time", (float) window.getTime());
+        shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
         scene.getModels().forEach(model -> {
             List<Mesh> meshes = model.getMeshes();
             for (Mesh mesh : meshes) {
@@ -81,11 +84,10 @@ public class Renderer {
                 shaderProgram.setUniform("albedo",mat.getAlbedo());
                 shaderProgram.setUniform("metallic",mat.getMetallic());
                 shaderProgram.setUniform("roughness",mat.getRoughness());
-                shaderProgram.setUniform("ao",0.99f);
-                shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
+                shaderProgram.setUniform("ao",1f);
 
                 shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(0,10,0)});
-                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(1f)});
+                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(2f)});
                 mesh.draw();
             }
         });

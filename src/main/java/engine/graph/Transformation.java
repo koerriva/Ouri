@@ -37,10 +37,8 @@ public class Transformation {
         Vector3f pos = new Vector3f();
         pos = camera.getPosition().negate(pos);
         V.identity();
+        V.rotate(camera.getRotation());
         V.translate(pos);
-        Vector3f dir=new Vector3f(1,0,0);
-        camera.getRotation().transform(dir);
-        V.lookAlong(dir.normalize(),new Vector3f(0,1,0));
         return V;
     }
 }

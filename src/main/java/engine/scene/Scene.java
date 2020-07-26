@@ -77,7 +77,7 @@ public class Scene {
                         Vector4f baseColor = new Vector4f(1.0f);
                         material = new Material(baseColor);
                         material.setRoughness(0.99f);
-                        material.setMetallic(0.99f);
+                        material.setMetallic(0.01f);
                     }
                     material.setAo(1.0f);
 
@@ -97,8 +97,6 @@ public class Scene {
             }else if(name.equals("Camera")){
                 camera = new Camera(name);
                 camera.setPosition(translation);
-                camera.setScale(scale);
-                camera.setRotation(rotation);
             }
         }
     }
