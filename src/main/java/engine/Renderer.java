@@ -79,7 +79,7 @@ public class Renderer {
                 shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
 
                 shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(10,10,10)});
-                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(100f)});
+                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(300f)});
                 mesh.draw();
             }
         });
