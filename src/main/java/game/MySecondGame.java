@@ -4,7 +4,10 @@ import engine.IGameLogic;
 import engine.Renderer;
 import engine.Window;
 import engine.graph.Mesh;
+import engine.scene.Camera;
+import engine.scene.Direction;
 import engine.scene.Scene;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import utils.ResourceLoader;
 
@@ -21,12 +24,14 @@ public class MySecondGame implements IGameLogic {
         this.renderer = new Renderer();
     }
 
+    private Camera camera;
     @Override
     public void init() throws Exception {
         ResourceLoader.init();
         renderer.init();
 
         scene = ResourceLoader.loadScene("Tank");
+        camera = scene.getCamera();
     }
 
     @Override
@@ -38,58 +43,18 @@ public class MySecondGame implements IGameLogic {
 
     @Override
     public void update(Window window,float interval) {
-        float speed = 3f;
-        Vector3f dir = new Vector3f();
+        Vector2f dir = window.getMouseDirection();
+        camera.yaw((float) Math.toRadians(dir.x*interval));
+        camera.pitch((float) Math.toRadians(dir.y*interval));
         if(window.isKeyPressed(GLFW_KEY_W)){
-            dir.z +=-1.0f;
-            System.out.println(scene.getCamera().getPosition().z);
+            camera.move(1,0);
+        }else if(window.isKeyPressed(GLFW_KEY_S)){
+            camera.move(-1,0);
+        }else if(window.isKeyPressed(GLFW_KEY_A)){
+            camera.move(0,1);
+        }else if(window.isKeyPressed(GLFW_KEY_D)){
+            camera.move(0,-1);
         }
-        if(window.isKeyPressed(GLFW_KEY_S)){
-            dir.z +=1.0f;
-            System.out.println(scene.getCamera().getPosition().z);
-        }
-        if(window.isKeyPressed(GLFW_KEY_A)){
-            dir.x +=-1.0f;
-            System.out.println(scene.getCamera().getPosition().x);
-        }
-        if(window.isKeyPressed(GLFW_KEY_D)){
-            dir.x +=1.0f;
-            System.out.println(scene.getCamera().getPosition().x);
-        }
-        scene.getCamera().getPosition().add(dir.mul(speed*interval));
-
-        float r = (float) Math.toRadians(1);
-        if(window.isKeyPressed(GLFW_KEY_Q)){
-            scene.getCamera().getRotation().rotateLocalY(r);
-        }
-        if(window.isKeyPressed(GLFW_KEY_E)){
-            scene.getCamera().getRotation().rotateLocalY(-r);
-        }
-        if(window.getMouseDirection().x<0){
-            scene.getCamera().getRotation().rotateLocalY(r);
-            window.setMouseDirection();
-        }
-        if(window.getMouseDirection().x>0){
-            scene.getCamera().getRotation().rotateLocalY(-r);
-            window.setMouseDirection();
-        }
-        if(window.getMouseDirection().y<0){
-            scene.getCamera().getRotation().rotateLocalX(-r);
-            window.setMouseDirection();
-        }
-        if(window.getMouseDirection().y>0){
-            scene.getCamera().getRotation().rotateLocalX(r);
-            window.setMouseDirection();
-        }
-
-        float h = 1;
-        if(window.isKeyPressed(GLFW_KEY_Z)){
-            scene.getCamera().getPosition().add(0,0.1f,0);
-        }
-        if(window.isKeyPressed(GLFW_KEY_C)){
-            scene.getCamera().getPosition().add(0,-0.1f,0);
-        }
-//        System.out.println(window.getMouseDirection());
     }
 
     @Override

@@ -2,11 +2,15 @@ package engine;
 
 import org.joml.Vector2d;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.*;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
 
 public class Window {
     private final String title;
@@ -15,9 +19,11 @@ public class Window {
     private boolean vSync = false;
     private boolean resized = false;
 
-    private double xPos=0;
-    private double yPos=0;
-    private Vector2d mouseDir = new Vector2d();
+    //mouse
+    private final Vector2f mouseDirection = new Vector2f();
+    private final Vector2d mouseLastPosition = new Vector2d(-1);
+    private final Vector2d mouseCurrPosition = new Vector2d();
+    private final float mouseSpeed = 0.05f;
 
     public Window(String title, int width, int height,boolean vSync) {
         this.title = title;
@@ -36,6 +42,7 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE,GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE,GLFW_TRUE);
         glfwWindowHint(GLFW_SAMPLES,4);
+
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -51,23 +58,19 @@ public class Window {
             this.resized = true;
         });
 
-        double[] xPosBuff = new double[1];
-        double[] yPosBuff = new double[1];
-        glfwGetCursorPos(handle,xPosBuff,yPosBuff);
-        xPos = xPosBuff[0]/width;yPos = yPosBuff[0]/height;
-        glfwSetCursorPosCallback(handle,((window, xpos, ypos) -> {
-            mouseDir.x = xpos/width - this.xPos;
-            mouseDir.y = ypos/height - this.yPos;
-            this.xPos = xpos/width;
-            this.yPos = ypos/height;
-            System.out.println(mouseDir);
-        }));
+        try(MemoryStack stack = MemoryStack.stackPush()){
+            DoubleBuffer xpos = stack.mallocDouble(1);
+            DoubleBuffer ypos = stack.mallocDouble(1);
+            glfwGetCursorPos(handle,xpos,ypos);
+            double x = xpos.get();
+            double y = ypos.get();
+            mouseCurrPosition.set(x,y);
+            mouseLastPosition.set(x,y);
+        }
 
-//        glfwSetKeyCallback(handle,(window,key,scancode,action,mods)->{
-//            if(key == GLFW_KEY_ESCAPE){
-//                glfwSetWindowShouldClose(handle,true);
-//            }
-//        });
+        glfwSetCursorPosCallback(handle,(w,xpos,ypos)->{
+            mouseCurrPosition.set(xpos,ypos);
+        });
 
         GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         if(vidMode!=null) {
@@ -79,6 +82,8 @@ public class Window {
             glfwSwapInterval(1);
         }
         glfwShowWindow(handle);
+
+        glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         GL.createCapabilities();
     }
@@ -118,18 +123,28 @@ public class Window {
     public void update(){
         glfwSwapBuffers(handle);
         glfwPollEvents();
+        updateMouseDirection();
     }
 
     public void close(){
         glfwSetWindowShouldClose(handle,true);
     }
 
-    public Vector2d getMouseDirection(){
-        return mouseDir;
+    public long getHandle() {
+        return handle;
     }
 
-    public void setMouseDirection(){
-        mouseDir.x = 0;
-        mouseDir.y = 0;
+    private void updateMouseDirection(){
+        double xpos = mouseCurrPosition.x;
+        double ypos = mouseCurrPosition.y;
+
+        mouseDirection.x = (float) (xpos - mouseLastPosition.x);
+        mouseDirection.y = (float) (ypos - mouseLastPosition.y);
+
+        mouseLastPosition.set(xpos,ypos);
+    }
+
+    public final Vector2f getMouseDirection(){
+        return mouseDirection;
     }
 }

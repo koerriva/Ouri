@@ -16,6 +16,7 @@ uniform vec3 lightPositions[1];
 uniform vec3 lightColors[1];
 
 uniform vec3 camPos;
+uniform mat4 VM;
 
 const float PI = 3.14159265359;
 
@@ -56,7 +57,8 @@ vec3 fresnelSchlick(float cosTheta, vec3 F0)
 void main()
 {
     vec3 N = normalize(Normal);
-    vec3 V = normalize(camPos - WorldPos);
+    vec3 cameraViewPos = (VM*vec4(camPos,1.0)).xyz;
+    vec3 V = normalize(cameraViewPos - WorldPos);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
@@ -69,7 +71,8 @@ void main()
 //        vec3 L = normalize(lightPositions[i] - WorldPos);
         vec3 L = -vec3(0.2,-0.8,0.0);
         vec3 H = normalize(V + L);
-        float distance    = length(lightPositions[i] - WorldPos);
+        vec3 lightPos = (VM*vec4(lightPositions[i],1.0)).xyz;
+        float distance    = length(lightPos - WorldPos);
 //        float attenuation = 1.0 / (distance * distance);
         float attenuation = 1.0;
         vec3 radiance     = lightColors[i] * attenuation;

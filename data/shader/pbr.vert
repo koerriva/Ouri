@@ -4,16 +4,15 @@ layout (location=1) in vec3 normal;
 layout (location=2) in vec2 texCoord;
 
 uniform mat4 P;
-uniform mat4 W;
-uniform mat4 V;
+uniform mat4 VM;
 
 out vec3 WorldPos;
 out vec3 Normal;
 out vec2 TexCoords;
 
 void main() {
-    vec4 vPos = V*W*vec4(position,1.0);
-    vec4 vNormal = V*W*vec4(normal,0.0);
+    vec4 vPos = VM*vec4(position,1.0);
+    vec4 vNormal = VM*vec4(normal,0.0);
     gl_Position = P * vPos;
 
     WorldPos = vPos.xyz;
