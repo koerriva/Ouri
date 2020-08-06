@@ -36,6 +36,13 @@ public class Transformation {
                 .scale(scale);
     }
 
+    public Matrix4f getWorldMatrix(Node node){
+        return W.identity()
+                .translation(node.getPosition())
+                .rotate(node.getRotation())
+                .scale(node.getScale());
+    }
+
     public final Matrix4f getViewMatrix(Camera camera){
         Vector3f pos = new Vector3f();
         pos = camera.getPosition().negate(pos);

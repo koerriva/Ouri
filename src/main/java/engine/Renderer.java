@@ -39,7 +39,8 @@ public class Renderer {
         shaderProgram = new ShaderProgram(source[0],source[1]);
 
         shaderProgram.createUniform("P");
-        shaderProgram.createUniform("VM");
+        shaderProgram.createUniform("V");
+        shaderProgram.createUniform("M");
 //        shaderProgram.createUniform("time");
 
 //        shaderProgram.createUniform("texture_diffuse");
@@ -65,20 +66,20 @@ public class Renderer {
 
         shaderProgram.bind();
         shaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
-        Matrix4f view = transformation.getViewMatrix(scene.getCamera());
+        shaderProgram.setUniform("V",scene.getCamera().getViewMatrix());
         scene.getModels().forEach(model -> {
             List<Mesh> meshes = model.getMeshes();
             for (Mesh mesh : meshes) {
-                shaderProgram.setUniform("VM",transformation.getModelViewMatrix(model,view));
+                shaderProgram.setUniform("M",transformation.getWorldMatrix(model));
                 Material mat = mesh.getMaterial();
                 shaderProgram.setUniform("albedo",mat.getAlbedo());
                 shaderProgram.setUniform("metallic",mat.getMetallic());
                 shaderProgram.setUniform("roughness",mat.getRoughness());
-                shaderProgram.setUniform("ao",0.99f);
+                shaderProgram.setUniform("ao",0f);
                 shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
 
                 shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(0,10,0)});
-                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(1f)});
+                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(100f)});
                 mesh.draw();
             }
         });

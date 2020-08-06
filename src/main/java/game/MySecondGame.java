@@ -47,13 +47,13 @@ public class MySecondGame implements IGameLogic {
         camera.yaw((float) Math.toRadians(dir.x*interval));
         camera.pitch((float) Math.toRadians(dir.y*interval));
         if(window.isKeyPressed(GLFW_KEY_W)){
-            camera.move(1,0);
+            camera.move(10*interval,0);
         }else if(window.isKeyPressed(GLFW_KEY_S)){
-            camera.move(-1,0);
+            camera.move(-10*interval,0);
         }else if(window.isKeyPressed(GLFW_KEY_A)){
-            camera.move(0,1);
+            camera.move(0,-10*interval);
         }else if(window.isKeyPressed(GLFW_KEY_D)){
-            camera.move(0,-1);
+            camera.move(0,10*interval);
         }
     }
 
