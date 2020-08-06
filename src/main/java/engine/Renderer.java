@@ -75,10 +75,10 @@ public class Renderer {
                 shaderProgram.setUniform("albedo",mat.getAlbedo());
                 shaderProgram.setUniform("metallic",mat.getMetallic());
                 shaderProgram.setUniform("roughness",mat.getRoughness());
-                shaderProgram.setUniform("ao",0f);
+                shaderProgram.setUniform("ao",1f);
                 shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
 
-                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(0,10,0)});
+                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(10,10,10)});
                 shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(100f)});
                 mesh.draw();
             }
