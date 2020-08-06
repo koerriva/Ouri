@@ -67,6 +67,10 @@ public class Renderer {
         shaderProgram.bind();
         shaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
         shaderProgram.setUniform("V",scene.getCamera().getViewMatrix());
+
+        shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(10,10,10)});
+        shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(300f)});
+        shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
         scene.getModels().forEach(model -> {
             List<Mesh> meshes = model.getMeshes();
             for (Mesh mesh : meshes) {
@@ -75,11 +79,8 @@ public class Renderer {
                 shaderProgram.setUniform("albedo",mat.getAlbedo());
                 shaderProgram.setUniform("metallic",mat.getMetallic());
                 shaderProgram.setUniform("roughness",mat.getRoughness());
-                shaderProgram.setUniform("ao",1f);
-                shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
+                shaderProgram.setUniform("ao",mat.getAo());
 
-                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(10,10,10)});
-                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(300f)});
                 mesh.draw();
             }
         });
