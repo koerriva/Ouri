@@ -1,6 +1,7 @@
 package engine.graph;
 
 import engine.scene.Camera;
+import engine.scene.Node;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -9,11 +10,13 @@ public class Transformation {
     private final Matrix4f P;
     private final Matrix4f W;
     private final Matrix4f V;
+    private final Matrix4f VM;
 
     public Transformation() {
         this.P = new Matrix4f();
         this.W = new Matrix4f();
         this.V = new Matrix4f();
+        this.VM = new Matrix4f();
     }
 
     public final Matrix4f getProjectionMatrix(float fov,float aspect,float zNear,float zFar){
@@ -33,12 +36,29 @@ public class Transformation {
                 .scale(scale);
     }
 
+    public Matrix4f getWorldMatrix(Node node){
+        return W.identity()
+                .translation(node.getPosition())
+                .rotate(node.getRotation())
+                .scale(node.getScale());
+    }
+
     public final Matrix4f getViewMatrix(Camera camera){
         Vector3f pos = new Vector3f();
         pos = camera.getPosition().negate(pos);
         V.identity();
-        V.rotate(camera.getRotation());
+        Vector3f rot = camera.getRotation();
+        V.rotate(rot.x,new Vector3f(1,0,0))
+                .rotate(rot.y,new Vector3f(0,1,0))
+                .rotate(rot.z,new Vector3f(0,0,1));
         V.translate(pos);
         return V;
+    }
+
+    public final Matrix4f getModelViewMatrix(Node node, Matrix4f view){
+        VM.set(view).translate(node.getPosition())
+                .rotate(node.getRotation())
+                .scale(node.getScale());
+        return VM;
     }
 }

@@ -6,6 +6,7 @@ import engine.graph.ShaderProgram;
 import engine.graph.Transformation;
 import engine.scene.Camera;
 import engine.scene.Scene;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import utils.ResourceLoader;
@@ -32,16 +33,14 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-//        glEnable(GL_CULL_FACE);
-//        glCullFace(GL_BACK_RIGHT);
-        glEnable(GL_FRAMEBUFFER_SRGB);
+//        glEnable(GL_FRAMEBUFFER_SRGB);
 //        String[] source = ResourceLoader.loadShaderFile("base");
         String[] source = ResourceLoader.loadShaderFile("pbr");
         shaderProgram = new ShaderProgram(source[0],source[1]);
 
         shaderProgram.createUniform("P");
-        shaderProgram.createUniform("W");
         shaderProgram.createUniform("V");
+        shaderProgram.createUniform("M");
 //        shaderProgram.createUniform("time");
 
 //        shaderProgram.createUniform("texture_diffuse");
@@ -67,27 +66,20 @@ public class Renderer {
 
         shaderProgram.bind();
         shaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
-//        shaderProgram.setUniform("P",transformation.getProjectionMatrix(10,Z_NEAR,Z_FAR));
-        shaderProgram.setUniform("V",transformation.getViewMatrix(scene.getCamera()));
-//        shaderProgram.setUniform("time", (float) window.getTime());
-        shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
+        shaderProgram.setUniform("V",scene.getCamera().getViewMatrix());
         scene.getModels().forEach(model -> {
             List<Mesh> meshes = model.getMeshes();
             for (Mesh mesh : meshes) {
-                Vector3f offset = model.getPosition();
-                Quaternionf rotation = model.getRotation();
-//                rotation.rotateLocalY((float) Math.toRadians(1));
-                Vector3f scale = model.getScale();
-                shaderProgram.setUniform("W",transformation.getWorldMatrix(offset,rotation,scale));
-//                shaderProgram.setUniform("texture_diffuse",0);
+                shaderProgram.setUniform("M",transformation.getWorldMatrix(model));
                 Material mat = mesh.getMaterial();
                 shaderProgram.setUniform("albedo",mat.getAlbedo());
                 shaderProgram.setUniform("metallic",mat.getMetallic());
                 shaderProgram.setUniform("roughness",mat.getRoughness());
                 shaderProgram.setUniform("ao",1f);
+                shaderProgram.setUniform("camPos",scene.getCamera().getPosition());
 
-                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(0,10,0)});
-                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(2f)});
+                shaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(10,10,10)});
+                shaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(300f)});
                 mesh.draw();
             }
         });

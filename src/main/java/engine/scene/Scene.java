@@ -15,7 +15,7 @@ import java.util.Map;
 public class Scene {
     private GLTF gltf;
     private final List<Model> models;
-    private Camera camera = new Camera("MainCamera");
+    private Camera camera = new Camera();
 
     public Scene(GLTF gltf){
         this.gltf = gltf;
@@ -77,7 +77,7 @@ public class Scene {
                         Vector4f baseColor = new Vector4f(1.0f);
                         material = new Material(baseColor);
                         material.setRoughness(0.99f);
-                        material.setMetallic(0.01f);
+                        material.setMetallic(0.99f);
                     }
                     material.setAo(1.0f);
 
@@ -95,8 +95,9 @@ public class Scene {
 
                 models.add(model);
             }else if(name.equals("Camera")){
-                camera = new Camera(name);
+                camera = new Camera();
                 camera.setPosition(translation);
+//                camera.setRotation(rotation);
             }
         }
     }
