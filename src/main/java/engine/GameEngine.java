@@ -1,9 +1,8 @@
 package engine;
 
-import utils.ResourceLoader;
 import utils.Timer;
 
-public class GameEngine implements Runnable {
+public class GameEngine implements Runnable{
 
     public static final int TARGET_FPS = 30;
     public static final int TARGET_UPS = 30;
@@ -88,5 +87,6 @@ public class GameEngine implements Runnable {
 
     protected void cleanup(){
         gameLogic.cleanup();
+        window.cleanup();
     }
 }

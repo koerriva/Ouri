@@ -6,11 +6,18 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
+import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
 
 public class Window {
     private final String title;
@@ -56,6 +63,15 @@ public class Window {
             this.width = w;
             this.height = h;
             this.resized = true;
+        });
+
+        glfwSetKeyCallback(handle,(window, key, scancode, action, mods) -> {
+            if(key==GLFW_KEY_ESCAPE&&action==GLFW_PRESS){
+                close();
+            }
+            if(key==GLFW_KEY_F5&&action==GLFW_PRESS){
+                saveScreen();
+            }
         });
 
         try(MemoryStack stack = MemoryStack.stackPush()){
@@ -121,9 +137,10 @@ public class Window {
     }
 
     public void update(){
+        updateMouseDirection();
+
         glfwSwapBuffers(handle);
         glfwPollEvents();
-        updateMouseDirection();
     }
 
     public void close(){
@@ -144,7 +161,39 @@ public class Window {
         mouseLastPosition.set(xpos,ypos);
     }
 
+    private void saveScreen(){
+        try {
+            int size = width*height*4;
+            byte[] buffer = new byte[size];
+            ByteBuffer pixels = MemoryUtil.memAlloc(size);
+            System.out.println("read framebuffer ...");
+            glReadPixels(0,0,width,height,GL_RGBA,GL_UNSIGNED_BYTE,pixels);
+            pixels.get(buffer);
+            MemoryUtil.memFree(pixels);
+
+            BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    int idx = (height - j - 1) * width + i;//flip y
+                    int rgb = 0xff;
+                    rgb = (rgb<<8)+buffer[idx*4];
+                    rgb = (rgb<<8)+buffer[idx*4+1];
+                    rgb = (rgb<<8)+buffer[idx*4+2];
+                    im.setRGB(i,j,rgb);
+                }
+            }
+            File file = new File("screenshot/"+System.currentTimeMillis()+".png");
+            ImageIO.write(im,"png",file);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public final Vector2f getMouseDirection(){
         return mouseDirection;
+    }
+
+    public void cleanup(){
+        glfwTerminate();
     }
 }

@@ -3,18 +3,16 @@ package game;
 import engine.IGameLogic;
 import engine.Renderer;
 import engine.Window;
-import engine.graph.Mesh;
 import engine.scene.Camera;
-import engine.scene.Direction;
 import engine.scene.Scene;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import utils.ResourceLoader;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glScaled;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class MySecondGame implements IGameLogic {
     private final Renderer renderer;
@@ -36,9 +34,6 @@ public class MySecondGame implements IGameLogic {
 
     @Override
     public void input(Window window) {
-        if(window.isKeyPressed(GLFW_KEY_ESCAPE)){
-            window.close();
-        }
     }
 
     @Override

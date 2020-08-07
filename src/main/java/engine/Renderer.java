@@ -9,8 +9,13 @@ import engine.scene.Scene;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 import utils.ResourceLoader;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
