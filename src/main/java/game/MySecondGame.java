@@ -8,10 +8,6 @@ import engine.scene.Scene;
 import org.joml.Vector2f;
 import utils.ResourceLoader;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class MySecondGame implements IGameLogic {

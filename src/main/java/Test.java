@@ -9,5 +9,14 @@ public class Test {
         System.out.println(r);
         up.cross(forward,r);
         System.out.println(r);
+
+        double a = 1.0/(1+Math.exp(-20));
+        System.out.println(a);
+
+
+        double b = Double.parseDouble("-9.74266650e-01");
+        System.out.println(b);
+
+        System.out.println(1^1);
     }
 }

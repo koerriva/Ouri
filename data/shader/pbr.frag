@@ -71,10 +71,17 @@ void main()
         vec3 lightPos = lightPositions[i];
         vec3 lightColor = lightColors[i];
 
-        vec3 L = normalize(lightPos - WorldPos);
+        //point light
+//        vec3 L = normalize(lightPos - WorldPos);
+//        vec3 H = normalize(V + L);
+//        float distance    = length(lightPos - WorldPos);
+//        float attenuation = 1.0 / (distance * distance);
+//        vec3 radiance     = lightColor * attenuation;
+
+        //directional light
+        vec3 L = normalize(lightPos);
         vec3 H = normalize(V + L);
-        float distance    = length(lightPos - WorldPos);
-        float attenuation = 1.0 / (distance * distance);
+        float attenuation = 0.01;
         vec3 radiance     = lightColor * attenuation;
 
         // cook-torrance brdf
