@@ -2,6 +2,7 @@ package engine.scene;
 
 import engine.graph.Material;
 import engine.graph.Mesh;
+import engine.graph.lights.DirectionalLight;
 import engine.scene.gltf.*;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -11,15 +12,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Scene {
     private GLTF gltf;
     private final List<Model> models;
     private Camera camera = new Camera();
+    private final List<DirectionalLight> directionalLights;
 
     public Scene(GLTF gltf){
         this.gltf = gltf;
         models = new ArrayList<>();
+        directionalLights = new ArrayList<>();
 
         for (GLTF_Node n:gltf.getNodes()){
             String name = n.getName();
@@ -98,6 +102,10 @@ public class Scene {
                 camera = new Camera();
                 camera.setPosition(translation);
 //                camera.setRotation(rotation);
+            }else if(name.equals("Light")){
+                DirectionalLight light = new DirectionalLight(rotation,translation);
+//                DirectionalLight light = new DirectionalLight(0,0,0);
+                directionalLights.add(light);
             }
         }
     }
@@ -108,6 +116,14 @@ public class Scene {
 
     public final Camera getCamera(){
         return camera;
+    }
+
+    public final Vector3f[] getLightPositions(){
+        return directionalLights.stream().map(DirectionalLight::getDirection).toArray(Vector3f[]::new);
+    }
+
+    public final Vector3f[] getLightColors(){
+        return directionalLights.stream().map(DirectionalLight::getColor).toArray(Vector3f[]::new);
     }
 
     public void cleanup(){

@@ -14,9 +14,9 @@ public class Renderer {
     private ShaderProgram meshShaderProgram;
     private ShaderProgram depthShaderProgram;
 
-    private float FOV = (float) Math.toRadians(60);
+    private float FOV = (float) Math.toRadians(45);
     private float Z_FAR = 1000.0f;
-    private float Z_NEAR = 0.01f;
+    private float Z_NEAR = 0.1f;
     private float aspect = 16.0f/9.0f;
 
     private final Transformation transformation;
@@ -34,7 +34,7 @@ public class Renderer {
 //        glEnable(GL_FRAMEBUFFER_SRGB);
 
         shadowMap = new ShadowMap();
-        setupDepthShaderProgram();
+//        setupDepthShaderProgram();
         setupMeshShaderProgram();
     }
 
@@ -72,7 +72,7 @@ public class Renderer {
     public void render(Window window, Scene scene){
         clear();
 
-        renderDepth(window,scene);
+//        renderDepth(window,scene);
 
         glViewport(0, 0, window.getWidth(), window.getHeight());
 
@@ -80,8 +80,8 @@ public class Renderer {
         meshShaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
         meshShaderProgram.setUniform("V",scene.getCamera().getViewMatrix());
 
-        meshShaderProgram.setUniform("lightPositions",new Vector3f[]{new Vector3f(10,10,10)});
-        meshShaderProgram.setUniform("lightColors",new Vector3f[]{new Vector3f(300f)});
+        meshShaderProgram.setUniform("lightPositions",scene.getLightPositions());
+        meshShaderProgram.setUniform("lightColors",scene.getLightColors());
         meshShaderProgram.setUniform("camPos",scene.getCamera().getPosition());
         scene.getModels().forEach(model -> {
             List<Mesh> meshes = model.getMeshes();
@@ -91,7 +91,7 @@ public class Renderer {
                 meshShaderProgram.setUniform("albedo",mat.getAlbedo());
                 meshShaderProgram.setUniform("metallic",mat.getMetallic());
                 meshShaderProgram.setUniform("roughness",mat.getRoughness());
-                meshShaderProgram.setUniform("ao",mat.getAo());
+                meshShaderProgram.setUniform("ao",3.0f);
 
                 mesh.draw();
             }
@@ -106,9 +106,10 @@ public class Renderer {
         depthShaderProgram.bind();
         depthShaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
         depthShaderProgram.setUniform("V",scene.getCamera().getViewMatrix());
-        depthShaderProgram.setUniform("M",transformation.getWorldMatrix(model));
+//        depthShaderProgram.setUniform("M",transformation.getWorldMatrix(model));
 
         depthShaderProgram.unbind();
+        glBindFramebuffer(GL_FRAMEBUFFER,0);
     }
 
     public void cleanup(){
