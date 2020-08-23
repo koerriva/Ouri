@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class AI2 {
     private static Logger logger = LoggerFactory.getLogger(AI2.class);
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     public static void main(String[] args) {
         //初始化种群
@@ -57,13 +57,11 @@ public class AI2 {
 
                 if(child.getFitness()>best.getFitness()){
                     best = child;
+                    logger.info("Gen {}, {}",gen,best.getFitness());
+                    best.save();
                 }
             }
-
-            logger.info("Gen {}, {}",gen,best.getFitness());
 //            Thread.sleep(1000);
         }
-
-        best.save();
     }
 }

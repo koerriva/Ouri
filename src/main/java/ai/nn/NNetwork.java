@@ -59,10 +59,6 @@ public class NNetwork {
         }
 
         weights = new double[len];
-        updateWeights();
-    }
-
-    private void updateWeights(){
         int pos = 0;
         for (int i = 0; i < hiddenLayerSize + 1; i++) {
             NMatrix w = weightMatrix[i];
@@ -76,24 +72,17 @@ public class NNetwork {
 
     public double[] input(NMatrix inputs){
         NMatrix a = inputs;
-        for (int i = 0; i < hiddenLayerSize; i++) {
+        for (int i = 0; i < hiddenLayerSize+1; i++) {
             NMatrix w = weightMatrix[i];
             NMatrix b = biasMatrix[i];
-            a = w.mul(a).add(b);
-            active(a);
-        }
-        return a.getData();
-    }
-
-    public double[] input(int[] inputs){
-        NMatrix a = new NMatrix(inputNodeSize,1);
-        for (int i = 0; i < inputNodeSize; i++) {
-            a.e(i,inputs[i]*1.0);
-        }
-        for (int i = 0; i < hiddenLayerSize; i++) {
-            NMatrix w = weightMatrix[i];
-            NMatrix b = biasMatrix[i];
-            a = w.mul(a).add(b);
+            NMatrix bi = new NMatrix(w.getRow(),a.getCol());
+//            System.out.println(w.getRow()+","+a.getCol());
+            for (int j = 0; j < w.getRow(); j++) {
+                for (int k = 0; k < a.getCol(); k++) {
+                    bi.e(j,k,b.e(j));
+                }
+            }
+            a = w.mul(a).add(bi);
             active(a);
         }
         return a.getData();
@@ -112,6 +101,20 @@ public class NNetwork {
     public void setWeights(double[] weights){
         for (int i = 0; i < this.weights.length; i++) {
             this.weights[i] = weights[i];
+        }
+        int pos = 0;
+        for (int i = 0; i < hiddenLayerSize+1; i++) {
+            int wsize = weightSize[i];
+            double[] wi = new double[wsize];
+            System.arraycopy(this.weights,pos,wi,0,wsize);
+            weightMatrix[i].setData(wi);
+            pos +=wsize;
+
+            int bsize = biasSize[i];
+            double[] bi = new double[bsize];
+            System.arraycopy(this.weights,pos,bi,0,bsize);
+            biasMatrix[i].setData(bi);
+            pos +=bsize;
         }
     }
 

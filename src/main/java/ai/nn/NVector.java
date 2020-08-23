@@ -17,6 +17,10 @@ public class NVector {
         return data[idx];
     }
 
+    public void e(int idx,double e){
+        data[idx] = e;
+    }
+
     public NVector add(NVector vec){
         int size = this.data.length;
         NVector v = new NVector(size);
@@ -57,8 +61,8 @@ public class NVector {
         int size = this.data.length;
         NVector v = new NVector(size);
         double sum = 0;
-        for (int i = 0; i < size; i++) {
-            sum += data[i]*data[i];
+        for (double datum : this.data) {
+            sum += datum * datum;
         }
         double len = Math.sqrt(sum);
         for (int i = 0; i < size; i++) {
@@ -68,8 +72,20 @@ public class NVector {
         return v;
     }
 
-    public int len(){
+    public int size(){
         return data.length;
+    }
+
+    public double length(){
+        return Math.sqrt(sqrLength());
+    }
+
+    public double sqrLength(){
+        double sum = 0;
+        for (double datum : this.data) {
+            sum += datum * datum;
+        }
+        return sum;
     }
 
     @Override
@@ -84,5 +100,9 @@ public class NVector {
         System.out.println("a+b="+a.add(b));
         System.out.println("unit a"+a.unit());
         System.out.println("unit b"+b.unit());
+    }
+
+    public final double[] getData() {
+        return this.data;
     }
 }

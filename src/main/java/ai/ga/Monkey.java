@@ -1,6 +1,10 @@
 package ai.ga;
 
+import java.util.Random;
+
 public class Monkey extends Agent {
+    private Random random = new Random();
+
     private static String chars = "abcdefghijklmnopqrstuvwxyz ";
     private char[] gene = new char[18];//to be or not to be
     private float fitness = 0;

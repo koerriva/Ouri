@@ -1,9 +1,14 @@
 package ai.ga;
 
+import ai.nn.NMatrix;
 import ai.nn.NNetwork;
+import ai.nn.NVector;
+
 import java.util.Arrays;
+import java.util.Random;
 
 public class XOR extends Agent {
+    private final Random random = new Random();
     private final double[] gene;
     private double fitness = 0;
 
@@ -19,24 +24,33 @@ public class XOR extends Agent {
     protected void calcFitness() {
         nn.setWeights(gene);
 
-        double score = 0;
-        int times = 100;
-        for (int i = 0; i < times; i++) {
-            int x = random.nextInt(2);
-            int y = random.nextInt(2);
+        NMatrix inputs  = new NMatrix(2,4);
+        NVector ev = new NVector(4);
 
-            int[] inputs = new int[]{x,y};
-            int answer = x^y;
-            double output = nn.input(inputs)[0];
-            double error = output-answer;
+        inputs.e(0,0,0); inputs.e(1,0,0);
+        ev.e(0, 0);
+        inputs.e(0,1,0); inputs.e(1,1,1);
+        ev.e(1, 1);
+        inputs.e(0,2,1); inputs.e(1,2,0);
+        ev.e(2, 1);
+        inputs.e(0,3,1); inputs.e(1,3,1);
+        ev.e(3, 0);
 
-            double c = Math.pow(error,2);
-            if(c<0.1){
-                score++;
+        int score = 0;
+        double[] r = nn.input(inputs);
+        NVector rv = new NVector(r).sub(ev);
+        for (double e:rv.getData()) {
+            double p = Math.abs(e);
+            if(p<0.1){
+                score += 3;
+            }else if(p>0.1&&p<0.2){
+                score += 2;
+            }else if(p>0.2&&p<0.3){
+                score += 1;
             }
         }
 
-        fitness = score/times;
+        fitness = score*1.0/12;
     }
 
     @Override

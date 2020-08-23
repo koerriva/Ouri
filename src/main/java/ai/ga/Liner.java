@@ -3,10 +3,12 @@ package ai.ga;
 import ai.nn.Perceptron;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import static ai.nn.NN.line;
 
 public class Liner extends Agent {
+    private Random random = new Random();
     private float[] gene;
     private float fitness = 0;
 

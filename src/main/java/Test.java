@@ -1,3 +1,4 @@
+import org.joml.Random;
 import org.joml.Vector3f;
 
 public class Test {
@@ -18,5 +19,11 @@ public class Test {
         System.out.println(b);
 
         System.out.println(1^1);
+
+        Random random = new Random(2);
+        for (int i = 0; i < 5; i++) {
+           int c = random.nextInt(2);
+           System.out.println(c);
+        }
     }
 }

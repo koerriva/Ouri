@@ -3,8 +3,6 @@ package ai.ga;
 import java.util.Random;
 
 public abstract class Agent {
-    protected static Random random = new Random();
-
     protected abstract void calcFitness();
 
     public void save(){}

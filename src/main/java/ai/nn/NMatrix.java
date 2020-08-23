@@ -1,8 +1,5 @@
 package ai.nn;
 
-import org.joml.Vector3f;
-
-import java.util.Arrays;
 import java.util.Random;
 
 public class NMatrix {
@@ -75,6 +72,10 @@ public class NMatrix {
         return data;
     }
 
+    public void setData(double[] data) {
+        System.arraycopy(data, 0, this.data, 0, data.length);
+    }
+
     public int getCol() {
         return col;
     }
@@ -89,7 +90,7 @@ public class NMatrix {
         builder.append("[");
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                builder.append(String.format("%.16f",e(i,j)));
+                builder.append(String.format("%.4f",e(i,j)));
                 if(j<col-1){
                     builder.append(" ");
                 }
