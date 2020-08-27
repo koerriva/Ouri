@@ -21,6 +21,7 @@ public class Renderer {
     private final Transformation transformation;
 
     private ShadowMap shadowMap;
+    private boolean capture = false;
 
     public Renderer() {
         transformation = new Transformation();
@@ -66,6 +67,10 @@ public class Renderer {
         meshShaderProgram.createUniform("camPos");
         meshShaderProgram.createUniform("lightPositions",1);
         meshShaderProgram.createUniform("lightColors",1);
+
+
+//        meshShaderProgram.createUniform("LP");
+//        meshShaderProgram.createUniform("LV");
     }
 
     public void render(Window window, Scene scene){
@@ -78,6 +83,10 @@ public class Renderer {
         meshShaderProgram.bind();
         meshShaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
         meshShaderProgram.setUniform("V",scene.getCamera().getViewMatrix());
+
+//        DirectionalLight light = scene.getDirectionLights().get(0);
+//        meshShaderProgram.setUniform("LP",transformation.getLightProjectionMatrix(light));
+//        meshShaderProgram.setUniform("LV",transformation.getLightViewMatrix(light));
 
         meshShaderProgram.setUniform("lightPositions",scene.getLightPositions());
         meshShaderProgram.setUniform("lightColors",scene.getLightColors());
@@ -114,6 +123,12 @@ public class Renderer {
                 mesh.draw();
             }
         });
+
+        if(!capture){
+            System.out.println(light.getPosition());
+            System.out.println("Capture ShadowMap ...");
+            capture = shadowMap.saveToImage();
+        }
 
         depthShaderProgram.unbind();
         glBindFramebuffer(GL_FRAMEBUFFER,0);

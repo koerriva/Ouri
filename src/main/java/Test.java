@@ -27,5 +27,7 @@ public class Test {
 //        }
 
         System.out.println(System.currentTimeMillis());
+
+        System.out.println(4*1.0/10*100);
     }
 }

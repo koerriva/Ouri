@@ -65,7 +65,7 @@ public class Transformation {
 
     public final Matrix4f getLightProjectionMatrix(DirectionalLight light) {
         return P.identity()
-                .setOrtho(-10,10,-10,10,-1,10);
+                .setOrtho(-50,50,-50,50,-1,100);
     }
 
     public final Matrix4f getLightViewMatrix(DirectionalLight light) {

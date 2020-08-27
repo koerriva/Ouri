@@ -1,5 +1,14 @@
 package engine.graph;
 
+import org.lwjgl.system.MemoryUtil;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL30.*;
 
@@ -38,5 +47,38 @@ public class ShadowMap {
     public void cleanup(){
         glDeleteFramebuffers(fbo);
         texture.cleanup();
+    }
+
+    public boolean saveToImage() {
+        int width = WIDTH;
+        int height = HEIGHT;
+        int size = width*height;
+        float[] buffer = new float[size];
+        FloatBuffer pixels = MemoryUtil.memAllocFloat(size);
+        System.out.println("read framebuffer ...");
+        glReadPixels(0,0,width,height,GL_DEPTH_COMPONENT,GL_FLOAT,pixels);
+        pixels.get(buffer);
+        MemoryUtil.memFree(pixels);
+
+        BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                int idx = (height - j - 1) * width + i;//flip y
+                int gray = (int)(buffer[idx]*255.999);
+                int rgb = 0xff;
+                rgb = (rgb<<8)+gray;
+                rgb = (rgb<<8)+gray;
+                rgb = (rgb<<8)+gray;
+                im.setRGB(i,j,rgb);
+            }
+        }
+        File file = new File("screenshot/"+System.currentTimeMillis()+".png");
+        try{
+            ImageIO.write(im,"png",file);
+            return true;
+        }catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }
