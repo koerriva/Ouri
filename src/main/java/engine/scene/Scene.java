@@ -118,6 +118,10 @@ public class Scene {
         return camera;
     }
 
+    public final List<DirectionalLight> getDirectionLights(){
+        return this.directionalLights;
+    }
+
     public final Vector3f[] getLightPositions(){
         return directionalLights.stream().map(DirectionalLight::getDirection).toArray(Vector3f[]::new);
     }

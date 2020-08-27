@@ -1,11 +1,10 @@
 package engine;
 
 import engine.graph.*;
+import engine.graph.lights.DirectionalLight;
 import engine.scene.Scene;
-import org.joml.Vector3f;
 import utils.ResourceLoader;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -34,7 +33,7 @@ public class Renderer {
 //        glEnable(GL_FRAMEBUFFER_SRGB);
 
         shadowMap = new ShadowMap();
-//        setupDepthShaderProgram();
+        setupDepthShaderProgram();
         setupMeshShaderProgram();
     }
 
@@ -72,7 +71,7 @@ public class Renderer {
     public void render(Window window, Scene scene){
         clear();
 
-//        renderDepth(window,scene);
+        renderDepth(window,scene);
 
         glViewport(0, 0, window.getWidth(), window.getHeight());
 
@@ -100,13 +99,21 @@ public class Renderer {
     }
 
     private void renderDepth(Window window,Scene scene){
+        DirectionalLight light = scene.getDirectionLights().get(0);
+
         glBindFramebuffer(GL_FRAMEBUFFER,shadowMap.getFbo());
         glViewport(0,0,ShadowMap.WIDTH,ShadowMap.HEIGHT);
         glClear(GL_DEPTH_BUFFER_BIT);
         depthShaderProgram.bind();
-        depthShaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
-        depthShaderProgram.setUniform("V",scene.getCamera().getViewMatrix());
-//        depthShaderProgram.setUniform("M",transformation.getWorldMatrix(model));
+        depthShaderProgram.setUniform("P",transformation.getLightProjectionMatrix(light));
+        depthShaderProgram.setUniform("V",transformation.getLightViewMatrix(light));
+        scene.getModels().forEach(model -> {
+            List<Mesh> meshes = model.getMeshes();
+            for (Mesh mesh : meshes) {
+                depthShaderProgram.setUniform("M",transformation.getWorldMatrix(model));
+                mesh.draw();
+            }
+        });
 
         depthShaderProgram.unbind();
         glBindFramebuffer(GL_FRAMEBUFFER,0);

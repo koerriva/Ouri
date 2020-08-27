@@ -20,6 +20,8 @@ uniform vec3 camPos;
 const float PI = 3.14159265359;
 const float R = 0.01745329251;
 
+uniform sampler2D shadow_map;
+
 float DistributionGGX(vec3 N, vec3 H, float roughness){
     float a      = roughness*roughness;
     float a2     = a*a;

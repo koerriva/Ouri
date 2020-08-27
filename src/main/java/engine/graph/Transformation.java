@@ -1,5 +1,6 @@
 package engine.graph;
 
+import engine.graph.lights.DirectionalLight;
 import engine.scene.Camera;
 import engine.scene.Node;
 import org.joml.Matrix4f;
@@ -60,5 +61,23 @@ public class Transformation {
                 .rotate(node.getRotation())
                 .scale(node.getScale());
         return VM;
+    }
+
+    public final Matrix4f getLightProjectionMatrix(DirectionalLight light) {
+        return P.identity()
+                .setOrtho(-10,10,-10,10,-1,10);
+    }
+
+    public final Matrix4f getLightViewMatrix(DirectionalLight light) {
+        Vector3f pos = new Vector3f();
+        light.getPosition().get(pos);
+        V.identity();
+        Vector3f rot = new Vector3f();
+        light.getRotation().getEulerAnglesXYZ(rot);
+        V.rotate(rot.x,new Vector3f(1,0,0))
+                .rotate(rot.y,new Vector3f(0,1,0))
+                .rotate(rot.z,new Vector3f(0,0,1));
+        V.translate(pos);
+        return V;
     }
 }
