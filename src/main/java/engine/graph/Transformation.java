@@ -65,18 +65,28 @@ public class Transformation {
 
     public final Matrix4f getLightProjectionMatrix(DirectionalLight light) {
         return P.identity()
-                .setOrtho(-50,50,-50,50,-1,100);
+                .setOrtho(-20,20,-20,20,-1,40);
     }
 
     public final Matrix4f getLightViewMatrix(DirectionalLight light) {
         Vector3f pos = new Vector3f();
-        light.getPosition().get(pos);
+        Vector3f direction = light.getDirection();
+        direction.get(pos);
+        pos.mul(10f);
+
         V.identity();
-        Vector3f rot = new Vector3f();
-        light.getRotation().getEulerAnglesXYZ(rot);
-        V.rotate(rot.x,new Vector3f(1,0,0))
-                .rotate(rot.y,new Vector3f(0,1,0))
-                .rotate(rot.z,new Vector3f(0,0,1));
+
+        float lightAngleX = (float)Math.acos(direction.z);
+        float lightAngleY = (float)Math.asin(direction.x);
+        float lightAngleZ = 0;
+        V.rotateX(lightAngleX);
+        V.rotateY(lightAngleY);
+
+//        Vector3f rot = new Vector3f();
+//        light.getRotation().getEulerAnglesXYZ(rot);
+//        V.rotateX(rot.x);
+//        V.rotateY(rot.y);
+
         V.translate(pos);
         return V;
     }

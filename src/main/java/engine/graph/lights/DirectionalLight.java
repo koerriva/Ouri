@@ -4,29 +4,19 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class DirectionalLight {
-    private final Vector3f direction;
+    private final Vector3f direction = new Vector3f();
     private final Quaternionf rotation = new Quaternionf();
     private final Vector3f color = new Vector3f(1);
     private final Vector3f position = new Vector3f(0,0,0);
-    private float intensity = 300f;
-
-    public DirectionalLight(float xDegrees,float yDegrees, float zDegrees){
-        direction = new Vector3f();
-        direction.rotateX((float) Math.toRadians(xDegrees));
-        direction.rotateY((float) Math.toRadians(yDegrees));
-        direction.rotateZ((float) Math.toRadians(zDegrees));
-    }
+    private final float intensity = 300f;
 
     public DirectionalLight(Quaternionf rotation,Vector3f translation){
         translation.get(position);
         rotation.get(this.rotation);
-        direction = new Vector3f();
-        rotation.getEulerAnglesXYZ(direction);
-    }
-
-    public DirectionalLight(Vector3f direction, Vector3f color) {
-        this.direction = direction;
-        color.get(this.color);
+        direction.x = 0;
+        direction.y = -0.4f;
+        direction.z = -0.6f;
+//        rotation.transform(new Vector3f(0,0,-1),direction);
     }
 
     public Vector3f getDirection() {

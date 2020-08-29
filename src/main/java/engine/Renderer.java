@@ -66,11 +66,13 @@ public class Renderer {
         meshShaderProgram.createUniform("ao");
         meshShaderProgram.createUniform("camPos");
         meshShaderProgram.createUniform("lightPositions",1);
+        meshShaderProgram.createUniform("lightDirections",1);
         meshShaderProgram.createUniform("lightColors",1);
 
 
-//        meshShaderProgram.createUniform("LP");
-//        meshShaderProgram.createUniform("LV");
+        meshShaderProgram.createUniform("LP");
+        meshShaderProgram.createUniform("LV");
+        meshShaderProgram.createUniform("shadowMap");
     }
 
     public void render(Window window, Scene scene){
@@ -84,13 +86,16 @@ public class Renderer {
         meshShaderProgram.setUniform("P",transformation.getProjectionMatrix(FOV,aspect,Z_NEAR,Z_FAR));
         meshShaderProgram.setUniform("V",scene.getCamera().getViewMatrix());
 
-//        DirectionalLight light = scene.getDirectionLights().get(0);
-//        meshShaderProgram.setUniform("LP",transformation.getLightProjectionMatrix(light));
-//        meshShaderProgram.setUniform("LV",transformation.getLightViewMatrix(light));
+        DirectionalLight light = scene.getDirectionLights().get(0);
+        meshShaderProgram.setUniform("LP",transformation.getLightProjectionMatrix(light));
+        meshShaderProgram.setUniform("LV",transformation.getLightViewMatrix(light));
+        meshShaderProgram.setUniform("shadowMap",0);
 
         meshShaderProgram.setUniform("lightPositions",scene.getLightPositions());
+        meshShaderProgram.setUniform("lightDirections",scene.getLightDirections());
         meshShaderProgram.setUniform("lightColors",scene.getLightColors());
         meshShaderProgram.setUniform("camPos",scene.getCamera().getPosition());
+
         scene.getModels().forEach(model -> {
             List<Mesh> meshes = model.getMeshes();
             for (Mesh mesh : meshes) {
@@ -101,7 +106,7 @@ public class Renderer {
                 meshShaderProgram.setUniform("roughness",mat.getRoughness());
                 meshShaderProgram.setUniform("ao",3.0f);
 
-                mesh.draw();
+                mesh.draw(shadowMap);
             }
         });
         meshShaderProgram.unbind();

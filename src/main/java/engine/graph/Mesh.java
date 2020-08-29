@@ -76,10 +76,20 @@ public class Mesh {
     }
 
     public void draw(){
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D,material.getTexture().getId());
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D,material.getTexture().getId());
         glBindVertexArray(vao);
 //        glDrawArrays(GL_TRIANGLES,0,getVertexCount());
+        glDrawElements(GL_TRIANGLES,indicesCount,indicesType,0);
+        glBindVertexArray(0);
+    }
+
+    public void draw(ShadowMap shadowMap){
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D,material.getTexture().getId());
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D,shadowMap.getTexture().getId());
+        glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES,indicesCount,indicesType,0);
         glBindVertexArray(0);
     }

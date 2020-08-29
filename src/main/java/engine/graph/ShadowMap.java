@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.lwjgl.opengl.GL11.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL30.*;
@@ -60,19 +62,28 @@ public class ShadowMap {
         pixels.get(buffer);
         MemoryUtil.memFree(pixels);
 
-        BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+//        BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_BYTE_GRAY);
+//        for (int i = 0; i < width; i++) {
+//            for (int j = 0; j < height; j++) {
+//                int idx = (height - j - 1) * width + i;//flip y
+//                int gray = (int)(buffer[idx]*255.999);
+//                im.setRGB(i,j,gray);
+//            }
+//        }
+
+        BufferedImage im = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 int idx = (height - j - 1) * width + i;//flip y
-                int gray = (int)(buffer[idx]*255.999);
-                int rgb = 0xff;
-                rgb = (rgb<<8)+gray;
-                rgb = (rgb<<8)+gray;
-                rgb = (rgb<<8)+gray;
+                float gray = buffer[idx];
+                int rgb = (int)(0x00FFFFFF*gray);
                 im.setRGB(i,j,rgb);
             }
         }
-        File file = new File("screenshot/"+System.currentTimeMillis()+".png");
+
+        LocalDateTime now = LocalDateTime.now();
+        String time = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        File file = new File("screenshot/"+time+".png");
         try{
             ImageIO.write(im,"png",file);
             return true;
